@@ -1,7 +1,7 @@
-import { ProfileSettings } from "@/components/ProfileSettings";
+import { CandidateLanding } from "@/components/CandidateLanding";
 
 const Index = () => {
-  return <ProfileSettings />;
+  return <CandidateLanding />;
 };
 
 export default Index;
