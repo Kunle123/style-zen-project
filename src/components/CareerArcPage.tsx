@@ -11,7 +11,6 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  Download, 
   Upload, 
   Calendar,
   Building,
@@ -21,7 +20,8 @@ import {
   MapPin,
   Sparkles,
   Brain,
-  FileText
+  FileText,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -96,6 +96,7 @@ export function CareerArcPage() {
   const [experiences, setExperiences] = useState<Experience[]>(mockExperiences);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
   const { toast } = useToast();
 
   const handleAddExperience = () => {
@@ -114,6 +115,53 @@ export function CareerArcPage() {
       title: "Experience deleted",
       description: "The experience has been removed from your Career Arc™.",
     });
+  };
+
+  const handleImportCV = async () => {
+    setIsImporting(true);
+    
+    toast({
+      title: "Starting CV import",
+      description: "Processing your CV file...",
+    });
+
+    try {
+      // Simulate CV processing time
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Mock imported experience
+      const importedExperience: Experience = {
+        id: Date.now().toString(),
+        title: "Imported Position",
+        company: "Imported Company",
+        location: "Remote",
+        startDate: "2022-01",
+        endDate: "2023-12",
+        current: false,
+        description: "",
+        achievements: [
+          "Successfully imported from CV",
+          "Experience details extracted automatically",
+          "Ready for editing and customization"
+        ],
+        skills: ["CV Import", "Data Processing", "Automation"]
+      };
+
+      setExperiences(prev => [importedExperience, ...prev]);
+      
+      toast({
+        title: "CV imported successfully",
+        description: "New experience has been added to your Career Arc™.",
+      });
+    } catch (error) {
+      toast({
+        title: "Import failed",
+        description: "There was an error processing your CV. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   const totalYears = Math.floor(experiences.length * 1.8); // Rough calculation
@@ -176,9 +224,19 @@ export function CareerArcPage() {
               />
             </Dialog>
             
-            <Button variant="outline" className="gap-2">
-              <Upload className="h-4 w-4" />
-              Import CV
+            
+            <Button 
+              variant="outline" 
+              className="gap-2" 
+              onClick={handleImportCV}
+              disabled={isImporting}
+            >
+              {isImporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="h-4 w-4" />
+              )}
+              {isImporting ? "Importing..." : "Import CV"}
             </Button>
           </div>
         </div>
