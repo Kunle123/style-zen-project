@@ -26,7 +26,7 @@ export function CandidateLanding() {
             <div className="text-2xl font-bold text-primary">Candidate 5</div>
             <div className="hidden md:flex items-center space-x-8">
               <a href="#home" className="text-foreground hover:text-primary transition-colors">Home</a>
-              <a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a>
+              <a href="/career-arc" className="text-foreground hover:text-primary transition-colors">Career Arc</a>
               <a href="/my-cvs" className="text-foreground hover:text-primary transition-colors">My CVs</a>
               <Button variant="outline">Login</Button>
             </div>
