@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Plus, 
   Edit, 
@@ -46,8 +47,9 @@ const mockExperiences: Experience[] = [
     startDate: "2025-02",
     endDate: "Present",
     current: true,
-    description: "Managed a team of offshore and onshore developers to develop and launch a new payments mobile app.",
+    description: "",
     achievements: [
+      "Managed a team of offshore and onshore developers to develop and launch a new payments mobile app",
       "Coordinated multiple disciplines including Testing, UX/UI, Product and Compliance",
       "Developed and enhanced an MVP concept within ITIL Service management framework",
       "Delivered robust consumer experience"
@@ -62,8 +64,9 @@ const mockExperiences: Experience[] = [
     startDate: "2023-06",
     endDate: "2025-02",
     current: false,
-    description: "Led digital transformation initiatives for payment systems across London's transport network.",
+    description: "",
     achievements: [
+      "Led digital transformation initiatives for payment systems across London's transport network",
       "Delivered critical payment infrastructure improvements",
       "Managed stakeholder relationships across multiple departments",
       "Improved system reliability by 40%"
@@ -78,8 +81,9 @@ const mockExperiences: Experience[] = [
     startDate: "2021-01",
     endDate: "2022-12",
     current: false,
-    description: "Oversaw integration projects for health data systems during the pandemic response.",
+    description: "",
     achievements: [
+      "Oversaw integration projects for health data systems during the pandemic response",
       "Successfully integrated multiple health data sources",
       "Ensured GDPR compliance across all systems",
       "Reduced data processing time by 60%"
@@ -176,11 +180,6 @@ export function CareerArcPage() {
               <Upload className="h-4 w-4" />
               Import CV
             </Button>
-            
-            <Button variant="outline" className="gap-2">
-              <Download className="h-4 w-4" />
-              Export PDF
-            </Button>
           </div>
         </div>
 
@@ -259,11 +258,12 @@ export function CareerArcPage() {
                 Career Timeline
               </h2>
               
-              <div className="relative">
-                {/* Timeline Line */}
-                <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border"></div>
-                
-                {experiences.map((experience, index) => (
+              <ScrollArea className="h-[600px] pr-4">
+                <div className="relative">
+                  {/* Timeline Line */}
+                  <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border"></div>
+                  
+                  {experiences.map((experience, index) => (
                   <div key={experience.id} className="relative flex gap-6 pb-8">
                     {/* Timeline Node */}
                     <div className="relative">
@@ -332,8 +332,6 @@ export function CareerArcPage() {
                       </CardHeader>
                       
                       <CardContent className="space-y-4">
-                        <p className="text-muted-foreground leading-relaxed">{experience.description}</p>
-                        
                         {experience.achievements.length > 0 && (
                           <div>
                             <h4 className="font-medium mb-2 text-card-foreground">Key Achievements</h4>
@@ -363,8 +361,9 @@ export function CareerArcPage() {
                       </CardContent>
                     </Card>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           </div>
         </div>
