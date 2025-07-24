@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Navigation } from "@/components/Navigation";
 import { 
   User, 
   Briefcase, 
@@ -134,29 +135,7 @@ export const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-bold">CandidateV</h1>
-          <nav className="flex items-center gap-6">
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
-              Home
-            </Button>
-            <Button variant="secondary" size="sm">
-              Dashboard
-            </Button>
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => navigate("/my-cvs")}>
-              My CVs
-            </Button>
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
-              Account
-            </Button>
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
-              Log Out
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <Navigation />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">

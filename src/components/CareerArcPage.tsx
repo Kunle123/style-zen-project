@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Navigation } from "@/components/Navigation";
 import { 
   Plus, 
   Edit, 
@@ -170,20 +171,7 @@ export function CareerArcPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-primary">Candidate 5</div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-foreground hover:text-primary transition-colors">Home</a>
-              <a href="/career-arc" className="text-primary font-medium">Career Arc</a>
-              <a href="/my-cvs" className="text-foreground hover:text-primary transition-colors">My CVs</a>
-              <Button variant="outline">Account</Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
