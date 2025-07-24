@@ -48,7 +48,11 @@ export function Navigation() {
             >
               My CVs
             </button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate("/account")}
+            >
               Account
             </Button>
             <Button variant="outline" size="sm">
