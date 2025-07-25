@@ -39,6 +39,16 @@ export function Navigation() {
               Career Arc
             </button>
             <button 
+              onClick={() => navigate("/application-wizard")}
+              className={`transition-colors ${
+                isActive("/application-wizard") 
+                  ? "text-primary font-medium" 
+                  : "text-foreground hover:text-primary"
+              }`}
+            >
+              Application Wizard
+            </button>
+            <button 
               onClick={() => navigate("/my-cvs")}
               className={`transition-colors ${
                 isActive("/my-cvs") 

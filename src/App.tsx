@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import DashboardPage from "./pages/Dashboard";
 import CVDownloadPage from "./pages/CVDownload";
 import CareerArc from "./pages/CareerArc";
+import ApplicationWizardPage from "./pages/ApplicationWizard";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<DashboardPage />} />
           <Route path="/landing" element={<Index />} />
           <Route path="/career-arc" element={<CareerArc />} />
+          <Route path="/application-wizard" element={<ApplicationWizardPage />} />
           <Route path="/my-cvs" element={<CVDownloadPage />} />
           <Route path="/account" element={<Account />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
