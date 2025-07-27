@@ -9,6 +9,8 @@ import CVDownloadPage from "./pages/CVDownload";
 import CareerArc from "./pages/CareerArc";
 import ApplicationWizardPage from "./pages/ApplicationWizard";
 import Account from "./pages/Account";
+import SubscriptionCancel from "./pages/SubscriptionCancel";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/application-wizard" element={<ApplicationWizardPage />} />
           <Route path="/my-cvs" element={<CVDownloadPage />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/subscription-cancel" element={<SubscriptionCancel />} />
+          <Route path="/subscription-success" element={<SubscriptionSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
