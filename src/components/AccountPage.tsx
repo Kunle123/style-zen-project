@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Separator } from "@/components/ui/separator";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Camera, Mail, Phone, User, CreditCard, Download, Shield, Trash2 } from "lucide-react";
+import { Loader2, Camera, Mail, Phone, User, CreditCard, Download, Shield, Trash2, MapPin, Linkedin } from "lucide-react";
 
 export function AccountPage() {
   const { toast } = useToast();
@@ -25,6 +25,12 @@ export function AccountPage() {
     phone: "+447966461005",
     emailVerified: true,
     avatarUrl: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    county: "",
+    postcode: "",
+    linkedin: "",
   });
 
   const [editedProfile, setEditedProfile] = useState(profile);
@@ -54,10 +60,34 @@ export function AccountPage() {
     
     // Validate phone number format
     const phoneRegex = /^\+[1-9]\d{1,14}$/;
-    if (!phoneRegex.test(editedProfile.phone)) {
+    if (editedProfile.phone && !phoneRegex.test(editedProfile.phone)) {
       toast({
         title: "Invalid phone number",
         description: "Please enter phone number in international format (e.g., +447966461005)",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate UK postcode format
+    const postcodeRegex = /^([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}|GIR\s*0AA)$/i;
+    if (editedProfile.postcode && !postcodeRegex.test(editedProfile.postcode)) {
+      toast({
+        title: "Invalid postcode",
+        description: "Please enter a valid UK postcode (e.g., SW1A 1AA or M1 1AA)",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate LinkedIn URL format
+    const linkedinRegex = /^https:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+\/?$/;
+    if (editedProfile.linkedin && !linkedinRegex.test(editedProfile.linkedin)) {
+      toast({
+        title: "Invalid LinkedIn URL",
+        description: "Please enter a valid LinkedIn profile URL (e.g., https://linkedin.com/in/yourprofile)",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -253,6 +283,86 @@ export function AccountPage() {
                     onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
                     disabled={!isEditing}
                     placeholder="+447966461005"
+                  />
+                </div>
+
+                {/* Address Section */}
+                <div className="space-y-4">
+                  <Label className="flex items-center gap-2 text-base font-medium">
+                    <MapPin className="h-4 w-4" />
+                    Address
+                  </Label>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="addressLine1">Address Line 1</Label>
+                    <Input
+                      id="addressLine1"
+                      value={editedProfile.addressLine1}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, addressLine1: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="e.g., 10 Downing Street"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="addressLine2">Address Line 2 (Optional)</Label>
+                    <Input
+                      id="addressLine2"
+                      value={editedProfile.addressLine2}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, addressLine2: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="e.g., Flat 2B, Westminster"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">Town/City</Label>
+                      <Input
+                        id="city"
+                        value={editedProfile.city}
+                        onChange={(e) => setEditedProfile({ ...editedProfile, city: e.target.value })}
+                        disabled={!isEditing}
+                        placeholder="e.g., London"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="county">County (Optional)</Label>
+                      <Input
+                        id="county"
+                        value={editedProfile.county}
+                        onChange={(e) => setEditedProfile({ ...editedProfile, county: e.target.value })}
+                        disabled={!isEditing}
+                        placeholder="e.g., Greater London"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="postcode">Postcode</Label>
+                    <Input
+                      id="postcode"
+                      value={editedProfile.postcode}
+                      onChange={(e) => setEditedProfile({ ...editedProfile, postcode: e.target.value.toUpperCase() })}
+                      disabled={!isEditing}
+                      placeholder="e.g., SW1A 1AA"
+                      className="uppercase"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="linkedin" className="flex items-center gap-2">
+                    <Linkedin className="h-4 w-4" />
+                    LinkedIn Profile
+                  </Label>
+                  <Input
+                    id="linkedin"
+                    value={editedProfile.linkedin}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, linkedin: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="https://linkedin.com/in/yourprofile"
                   />
                 </div>
               </div>
