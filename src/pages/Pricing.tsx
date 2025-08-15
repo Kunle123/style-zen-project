@@ -7,57 +7,68 @@ import { Check } from "lucide-react";
 const Pricing = () => {
   const plans = [
     {
-      name: "Starter",
-      price: "£9.99",
-      period: "per month",
-      description: "Perfect for occasional job applications",
+      name: "Free",
+      price: "£0",
+      period: "",
+      description: "Get started with basic access",
       features: [
-        "5 CV generations per month",
-        "5 cover letters per month",
-        "Basic keyword analysis",
+        "3 credits per month",
+        "Basic access",
         "PDF downloads",
         "Email support"
       ],
       recommended: false,
-      buttonText: "Get Started",
+      buttonText: "Get Started Free",
       buttonVariant: "outline" as const
     },
     {
-      name: "Professional",
-      price: "£19.99",
-      period: "per month",
-      description: "Ideal for active job seekers",
+      name: "Top-up",
+      price: "£29.99",
+      period: "one-off",
+      description: "Pay as you go with no subscription",
       features: [
-        "25 CV generations per month",
-        "25 cover letters per month",
-        "Advanced keyword analysis",
-        "Multiple CV templates",
+        "50 credits (one-off purchase)",
+        "No subscription required",
+        "Credits never expire",
         "PDF downloads",
-        "Priority email support",
-        "Career Arc insights"
+        "Email support"
+      ],
+      recommended: false,
+      buttonText: "Buy Credits",
+      buttonVariant: "secondary" as const
+    },
+    {
+      name: "Monthly",
+      price: "£24.99",
+      period: "per month",
+      description: "Perfect for regular users",
+      features: [
+        "50 credits immediately",
+        "3 credits per day",
+        "Priority support",
+        "Advanced features",
+        "PDF downloads"
       ],
       recommended: true,
-      buttonText: "Start Free Trial",
+      buttonText: "Start Monthly Plan",
       buttonVariant: "default" as const
     },
     {
-      name: "Enterprise",
-      price: "£39.99",
-      period: "per month",
-      description: "For recruitment agencies and teams",
+      name: "Annual",
+      price: "£199",
+      period: "per year",
+      description: "Best value with 33% discount",
       features: [
-        "Unlimited CV generations",
-        "Unlimited cover letters",
-        "Advanced analytics",
-        "Custom templates",
-        "Team collaboration",
-        "API access",
-        "Dedicated support",
-        "White-label options"
+        "50 credits per month",
+        "5 credits per day",
+        "Priority support",
+        "Advanced features",
+        "PDF downloads",
+        "33% discount"
       ],
       recommended: false,
-      buttonText: "Contact Sales",
-      buttonVariant: "secondary" as const
+      buttonText: "Choose Annual",
+      buttonVariant: "outline" as const
     }
   ];
 
@@ -75,7 +86,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {plans.map((plan, index) => (
             <Card key={index} className={`relative ${plan.recommended ? 'border-primary shadow-lg scale-105' : ''}`}>
               {plan.recommended && (
