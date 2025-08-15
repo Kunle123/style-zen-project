@@ -20,7 +20,7 @@ const Pricing = () => {
       ],
       recommended: false,
       buttonText: "Get Started Free",
-      buttonVariant: "outline" as const
+      buttonVariant: "default" as const
     },
     {
       name: "Monthly",
@@ -58,7 +58,7 @@ const Pricing = () => {
       ],
       recommended: false,
       buttonText: "Choose Annual - Save 33%!",
-      buttonVariant: "success" as const
+      buttonVariant: "default" as const
     }
   ];
 
@@ -76,7 +76,7 @@ const Pricing = () => {
       "Email support"
     ],
     buttonText: "Buy Credits",
-    buttonVariant: "warning" as const
+    buttonVariant: "default" as const
   };
 
   return (
