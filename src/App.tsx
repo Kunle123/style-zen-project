@@ -11,6 +11,7 @@ import ApplicationWizardPage from "./pages/ApplicationWizard";
 import Account from "./pages/Account";
 import SubscriptionCancel from "./pages/SubscriptionCancel";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import FAQ from "./pages/FAQ";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/account" element={<Account />} />
           <Route path="/subscription-cancel" element={<SubscriptionCancel />} />
           <Route path="/subscription-success" element={<SubscriptionSuccess />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/faq" element={<FAQ />} />
