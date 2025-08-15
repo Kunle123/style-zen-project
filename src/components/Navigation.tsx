@@ -58,6 +58,16 @@ export function Navigation() {
             >
               My CVs
             </button>
+            <button 
+              onClick={() => navigate("/pricing")}
+              className={`transition-colors ${
+                isActive("/pricing") 
+                  ? "text-primary font-medium" 
+                  : "text-foreground hover:text-primary"
+              }`}
+            >
+              Pricing
+            </button>
             <Button 
               variant="outline" 
               size="sm"
