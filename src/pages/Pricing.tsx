@@ -1,3 +1,4 @@
+
 import { Navigation } from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 
 const Pricing = () => {
-  const plans = [
+  const mainPlans = [
     {
       name: "Free",
       price: "£0",
@@ -14,28 +15,12 @@ const Pricing = () => {
       features: [
         "3 credits per month",
         "Basic access",
-        "PDF downloads",
+        "DocX CV downloads",
         "Email support"
       ],
       recommended: false,
       buttonText: "Get Started Free",
       buttonVariant: "outline" as const
-    },
-    {
-      name: "Top-up",
-      price: "£29.99",
-      period: "one-off",
-      description: "Pay as you go with no subscription",
-      features: [
-        "50 credits (one-off purchase)",
-        "No subscription required",
-        "Credits never expire",
-        "PDF downloads",
-        "Email support"
-      ],
-      recommended: false,
-      buttonText: "Buy Credits",
-      buttonVariant: "secondary" as const
     },
     {
       name: "Monthly",
@@ -44,10 +29,13 @@ const Pricing = () => {
       description: "Perfect for regular users",
       features: [
         "50 credits immediately",
+        "50 credits monthly recurring",
         "3 credits per day",
+        "Create up to 140 CVs per month",
         "Priority support",
         "Advanced features",
-        "PDF downloads"
+        "DocX CV downloads",
+        "Cancel anytime"
       ],
       recommended: true,
       buttonText: "Start Monthly Plan",
@@ -59,18 +47,37 @@ const Pricing = () => {
       period: "per year",
       description: "Best value with 33% discount",
       features: [
-        "50 credits per month",
+        "50 credits monthly recurring",
         "5 credits per day",
+        "Create up to 200 CVs per month",
         "Priority support",
         "Advanced features",
-        "PDF downloads",
-        "33% discount"
+        "DocX CV downloads",
+        "33% discount",
+        "Cancel anytime"
       ],
       recommended: false,
-      buttonText: "Choose Annual",
-      buttonVariant: "outline" as const
+      buttonText: "Choose Annual - Save 33%!",
+      buttonVariant: "success" as const
     }
   ];
+
+  const topUpPlan = {
+    name: "Top-up",
+    price: "£29.99",
+    period: "one-off",
+    description: "Pay as you go with no subscription",
+    features: [
+      "50 credits (one-off purchase)",
+      "No subscription required",
+      "Credits expire after 1 month",
+      "Can be added to any plan",
+      "DocX CV downloads",
+      "Email support"
+    ],
+    buttonText: "Buy Credits",
+    buttonVariant: "warning" as const
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -86,8 +93,8 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {plans.map((plan, index) => (
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {mainPlans.map((plan, index) => (
             <Card key={index} className={`relative ${plan.recommended ? 'border-primary shadow-lg scale-105' : ''}`}>
               {plan.recommended && (
                 <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
@@ -132,6 +139,44 @@ const Pricing = () => {
           ))}
         </div>
 
+        <div className="max-w-md mx-auto mb-12">
+          <Card className="border-dashed border-2">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-xl font-bold text-foreground">
+                {topUpPlan.name}
+              </CardTitle>
+              <div className="space-y-2">
+                <div className="text-3xl font-bold text-primary">
+                  {topUpPlan.price}
+                </div>
+                <p className="text-muted-foreground">{topUpPlan.period}</p>
+                <p className="text-sm text-muted-foreground">
+                  {topUpPlan.description}
+                </p>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="space-y-6">
+              <ul className="space-y-3">
+                {topUpPlan.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-success flex-shrink-0" />
+                    <span className="text-foreground text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <Button 
+                variant={topUpPlan.buttonVariant} 
+                className="w-full"
+                size="lg"
+              >
+                {topUpPlan.buttonText}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card className="max-w-4xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
@@ -161,7 +206,7 @@ const Pricing = () => {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Check className="h-5 w-5 text-success" />
-                  <span className="text-foreground">Professional PDF exports</span>
+                  <span className="text-foreground">Professional DocX exports</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Check className="h-5 w-5 text-success" />
