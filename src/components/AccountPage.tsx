@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Separator } from "@/components/ui/separator";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Camera, Mail, Phone, User, CreditCard, Download, Shield, Trash2, MapPin, Linkedin } from "lucide-react";
+import { Loader2, Camera, Mail, Phone, User, CreditCard, Download, Shield, Trash2, MapPin, Linkedin, Coins, Calendar, Clock } from "lucide-react";
 
 export function AccountPage() {
   const { toast } = useToast();
@@ -48,6 +48,13 @@ export function AccountPage() {
     status: "Active",
     nextBilling: "February 15, 2025",
     amount: "$29.99/month",
+  });
+
+  // Credits state
+  const [creditsData] = useState({
+    dailyCredits: { current: 12, max: 20, expiresAt: "end of day" },
+    monthlyCredits: { current: 85, max: 100, renewsAt: "February 15, 2025" },
+    topupCredits: { current: 15, expiresAt: "March 10, 2025" }
   });
 
   const handleEditProfile = () => {
@@ -528,6 +535,83 @@ export function AccountPage() {
                 <div className="text-sm text-muted-foreground">
                   No billing history available
                 </div>
+              </div>
+
+              <Separator />
+
+              {/* Credits Section */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium flex items-center gap-2">
+                  <Coins className="h-4 w-4 text-primary" />
+                  Credit Balance
+                </h4>
+                
+                <div className="grid gap-3">
+                  {/* Daily Credits */}
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-warning" />
+                      <div>
+                        <span className="text-sm font-medium">Daily Credits</span>
+                        <p className="text-xs text-muted-foreground">Expires {creditsData.dailyCredits.expiresAt}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg font-bold">
+                        {creditsData.dailyCredits.current}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        /{creditsData.dailyCredits.max}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Monthly Credits */}
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <div>
+                        <span className="text-sm font-medium">Monthly Credits</span>
+                        <p className="text-xs text-muted-foreground">Renews {creditsData.monthlyCredits.renewsAt}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg font-bold">
+                        {creditsData.monthlyCredits.current}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        /{creditsData.monthlyCredits.max}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Top-up Credits */}
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Coins className="h-4 w-4 text-success" />
+                      <div>
+                        <span className="text-sm font-medium">Top-up Credits</span>
+                        <p className="text-xs text-muted-foreground">Expires {creditsData.topupCredits.expiresAt}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg font-bold">
+                        {creditsData.topupCredits.current}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <span className="text-sm font-medium">Total Available:</span>
+                  <span className="text-lg font-bold text-primary">
+                    {creditsData.dailyCredits.current + creditsData.monthlyCredits.current + creditsData.topupCredits.current} credits
+                  </span>
+                </div>
+
+                <Button variant="outline" className="w-full">
+                  Buy More Credits
+                </Button>
               </div>
 
               <Separator />

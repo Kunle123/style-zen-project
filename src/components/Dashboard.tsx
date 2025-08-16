@@ -9,7 +9,10 @@ import {
   Download,
   CheckCircle,
   Circle,
-  ArrowRight
+  ArrowRight,
+  Coins,
+  Calendar,
+  Clock
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -84,6 +87,13 @@ export const Dashboard = () => {
     hasDownloads: false
   };
 
+  // Mock credits data - in real app this would come from user state/API
+  const creditsData = {
+    dailyCredits: { current: 12, max: 20, expiresAt: "end of day" },
+    monthlyCredits: { current: 85, max: 100, renewsAt: "February 15, 2025" },
+    topupCredits: { current: 15, expiresAt: "March 10, 2025" }
+  };
+
   const getCurrentStep = () => {
     if (!userProgress.personalDetails) return 1;
     if (!userProgress.careerHistory) return 2;
@@ -151,6 +161,78 @@ export const Dashboard = () => {
             CVs and cover letters tailored to your dream jobs.
           </p>
         </div>
+
+        {/* Credits Overview */}
+        <Card className="mb-8 bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Coins className="h-5 w-5 text-primary" />
+              Your Credits
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* Daily Credits */}
+              <div className="p-4 bg-background/80 rounded-lg border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="h-4 w-4 text-warning" />
+                  <span className="font-medium text-sm">Daily Credits</span>
+                </div>
+                <div className="text-2xl font-bold text-foreground">
+                  {creditsData.dailyCredits.current}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{creditsData.dailyCredits.max}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Expires {creditsData.dailyCredits.expiresAt}
+                </p>
+              </div>
+
+              {/* Monthly Credits */}
+              <div className="p-4 bg-background/80 rounded-lg border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  <span className="font-medium text-sm">Monthly Credits</span>
+                </div>
+                <div className="text-2xl font-bold text-foreground">
+                  {creditsData.monthlyCredits.current}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{creditsData.monthlyCredits.max}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Renews {creditsData.monthlyCredits.renewsAt}
+                </p>
+              </div>
+
+              {/* Top-up Credits */}
+              <div className="p-4 bg-background/80 rounded-lg border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Coins className="h-4 w-4 text-success" />
+                  <span className="font-medium text-sm">Top-up Credits</span>
+                </div>
+                <div className="text-2xl font-bold text-foreground">
+                  {creditsData.topupCredits.current}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Expires {creditsData.topupCredits.expiresAt}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center mt-4 pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                Total available: <span className="font-medium">
+                  {creditsData.dailyCredits.current + creditsData.monthlyCredits.current + creditsData.topupCredits.current} credits
+                </span>
+              </p>
+              <Button variant="outline" size="sm" onClick={() => navigate("/pricing")}>
+                Buy More Credits
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Progress Steps */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 mb-12">
