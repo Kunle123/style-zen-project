@@ -100,12 +100,6 @@ export function CareerArcPage() {
   const [isImporting, setIsImporting] = useState(false);
   const { toast } = useToast();
 
-  // Identifier banner for debugging
-  const banner = (
-    <div style={{ background: '#f472b6', color: '#1e293b', padding: '8px', fontWeight: 'bold', textAlign: 'center', fontSize: '18px' }}>
-      Zen Career Arc Page 1
-    </div>
-  );
 
   const handleAddExperience = () => {
     setEditingExperience(null);
@@ -178,7 +172,6 @@ export function CareerArcPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {banner}
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
