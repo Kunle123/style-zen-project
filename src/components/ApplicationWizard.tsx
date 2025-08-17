@@ -40,6 +40,10 @@ const ApplicationWizard = () => {
   });
   const [generatedCV, setGeneratedCV] = useState('');
   const [generatedCoverLetter, setGeneratedCoverLetter] = useState('');
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [cvUpdateRequest, setCvUpdateRequest] = useState('');
+  const [coverLetterUpdateRequest, setCoverLetterUpdateRequest] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const steps = [
     { number: 1, title: 'Paste Job Description' },
@@ -77,6 +81,7 @@ const ApplicationWizard = () => {
   const handleGenerate = async () => {
     setIsGenerating(true);
     setShowOptionsModal(false);
+    setCurrentStep(3);
     
     // Simulate document generation
     setTimeout(() => {
@@ -107,7 +112,6 @@ I would welcome the opportunity to discuss how my skills and experience can bene
 Best regards,
 John Doe`);
       
-      setCurrentStep(4);
       setIsGenerating(false);
       
       toast({
@@ -115,6 +119,41 @@ John Doe`);
         description: "Your CV and cover letter have been successfully generated!",
       });
     }, 3000);
+  };
+
+  const handleRequestUpdates = () => {
+    setShowUpdateModal(true);
+  };
+
+  const handleApplyUpdates = async () => {
+    setIsUpdating(true);
+    setShowUpdateModal(false);
+    
+    // Simulate AI processing updates
+    setTimeout(() => {
+      if (cvUpdateRequest.trim()) {
+        setGeneratedCV(prev => prev + `\n\nADDITIONAL EXPERIENCE
+Space X Project Contributor | NASA | 2021
+• ${cvUpdateRequest}`);
+      }
+      
+      if (coverLetterUpdateRequest.trim()) {
+        setGeneratedCoverLetter(prev => prev.replace(
+          'Best regards,',
+          `Additionally, I want to highlight my experience: ${coverLetterUpdateRequest}\n\nBest regards,`
+        ));
+      }
+      
+      setCurrentStep(4);
+      setIsUpdating(false);
+      setCvUpdateRequest('');
+      setCoverLetterUpdateRequest('');
+      
+      toast({
+        title: "Documents Updated",
+        description: "Your CV and cover letter have been updated with your requests!",
+      });
+    }, 2000);
   };
 
   const getKeywordColor = (status: Keyword['status']) => {
@@ -281,6 +320,67 @@ John Doe`);
           </div>
         )}
 
+        {/* Step 3: Generate Documents */}
+        {currentStep === 3 && !isGenerating && !isUpdating && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Documents Generated</span>
+                {jobTitle && (
+                  <div className="text-right">
+                    <div className="text-sm font-medium">{jobTitle}</div>
+                    <div className="text-sm text-muted-foreground">{companyName}</div>
+                  </div>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="cv" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="cv">Generated CV</TabsTrigger>
+                  <TabsTrigger value="cover-letter">Generated Cover Letter</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="cv" className="space-y-4">
+                  <div className="border rounded-lg p-4 bg-muted/50 min-h-[300px]">
+                    <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="cover-letter" className="space-y-4">
+                  <div className="border rounded-lg p-4 bg-muted/50 min-h-[300px]">
+                    <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
+                  </div>
+                </TabsContent>
+              </Tabs>
+              
+              <div className="flex gap-4 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(2)}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleRequestUpdates}
+                >
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  Request Updates
+                </Button>
+                <Button
+                  onClick={() => setCurrentStep(4)}
+                  className="flex-1"
+                >
+                  Review & Download
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Step 4: Review & Download */}
         {currentStep === 4 && (
           <div className="space-y-6">
@@ -307,33 +407,25 @@ John Doe`);
                     <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
                       <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
                     </div>
-                    <Button className="w-full">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download CV
-                    </Button>
                   </TabsContent>
                   
                   <TabsContent value="cover-letter" className="space-y-4">
                     <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
                       <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
                     </div>
-                    <Button className="w-full">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Cover Letter
-                    </Button>
                   </TabsContent>
                 </Tabs>
                 
                 <div className="flex gap-4 mt-6">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentStep(2)}
+                    onClick={() => setCurrentStep(3)}
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Analysis
+                    Back
                   </Button>
                   <Button
-                    onClick={() => window.location.href = '/my-cvs'}
+                    onClick={() => window.location.href = '/cv-download'}
                     className="flex-1"
                   >
                     Go to Download CVs Page
@@ -346,14 +438,19 @@ John Doe`);
         )}
 
         {/* Loading state for step 3 */}
-        {currentStep === 3 && isGenerating && (
+        {(currentStep === 3 && isGenerating) || isUpdating && (
           <Card>
             <CardContent className="py-12">
               <div className="text-center space-y-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                <h3 className="text-lg font-semibold">Generating Your Documents</h3>
+                <h3 className="text-lg font-semibold">
+                  {isUpdating ? 'Updating Your Documents' : 'Generating Your Documents'}
+                </h3>
                 <p className="text-muted-foreground">
-                  Please wait while we create your optimized CV and cover letter...
+                  {isUpdating 
+                    ? 'Please wait while we apply your requested updates...'
+                    : 'Please wait while we create your optimized CV and cover letter...'
+                  }
                 </p>
               </div>
             </CardContent>
@@ -414,6 +511,63 @@ John Doe`);
             <Button onClick={handleGenerate} className="w-full">
               Generate Documents
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Update Request Modal */}
+      <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Request Document Updates</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            <p className="text-muted-foreground">
+              Provide specific updates you'd like to see in your CV and cover letter. The AI will incorporate your requests into the documents.
+            </p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  CV Updates
+                </label>
+                <Textarea
+                  placeholder="e.g., Please include worked at Space X on a project whilst at NASA..."
+                  value={cvUpdateRequest}
+                  onChange={(e) => setCvUpdateRequest(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Cover Letter Updates
+                </label>
+                <Textarea
+                  placeholder="e.g., Mention my experience with machine learning projects..."
+                  value={coverLetterUpdateRequest}
+                  onChange={(e) => setCoverLetterUpdateRequest(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowUpdateModal(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleApplyUpdates}
+                disabled={!cvUpdateRequest.trim() && !coverLetterUpdateRequest.trim()}
+                className="flex-1"
+              >
+                Apply Updates
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
