@@ -290,24 +290,10 @@ Space X Project Contributor | NASA | 2021
                       </div>
                     </div>
 
-                    <div className="flex gap-4">
-                      <Button
-                        variant="outline"
-                        onClick={() => setCurrentStep(1)}
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => window.open('/career-arc', '_blank')}
-                      >
-                        <Edit3 className="w-4 h-4 mr-2" />
-                        Edit Arc Data
-                      </Button>
+                    <div className="flex justify-end">
                       <Button
                         onClick={() => setShowOptionsModal(true)}
-                        className="flex-1"
+                        className="w-full"
                       >
                         Generate CV & Cover Letter
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -355,13 +341,6 @@ Space X Project Contributor | NASA | 2021
               </Tabs>
               
               <div className="flex gap-4 mt-6">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentStep(2)}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
                 <Button
                   variant="outline"
                   onClick={handleRequestUpdates}
@@ -416,17 +395,10 @@ Space X Project Contributor | NASA | 2021
                   </TabsContent>
                 </Tabs>
                 
-                <div className="flex gap-4 mt-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => setCurrentStep(3)}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
-                  </Button>
+                <div className="flex justify-center mt-6">
                   <Button
                     onClick={() => window.location.href = '/cv-download'}
-                    className="flex-1"
+                    className="w-full"
                   >
                     Go to Download CVs Page
                     <ArrowRight className="w-4 h-4 ml-2" />
