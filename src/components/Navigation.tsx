@@ -59,6 +59,16 @@ export function Navigation() {
               My CVs
             </button>
             <button 
+              onClick={() => navigate("/application-history")}
+              className={`transition-colors ${
+                isActive("/application-history") 
+                  ? "text-primary font-medium" 
+                  : "text-foreground hover:text-primary"
+              }`}
+            >
+              Application History
+            </button>
+            <button 
               onClick={() => navigate("/pricing")}
               className={`transition-colors ${
                 isActive("/pricing") 
