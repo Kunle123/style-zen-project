@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 interface JobApplication {
@@ -54,25 +54,50 @@ const ApplicationHistory = () => {
   const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedApplication, setEditedApplication] = useState<JobApplication | null>(null);
+  const [isAddMode, setIsAddMode] = useState(false);
 
   const handleRowClick = (application: JobApplication) => {
     setSelectedApplication(application);
     setEditedApplication({ ...application });
+    setIsAddMode(false);
+    setIsModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    const newApplication: JobApplication = {
+      id: Date.now().toString(),
+      jobTitle: "",
+      contactName: "",
+      contactNumber: "",
+      dateCreated: new Date().toISOString().split('T')[0],
+      salary: "",
+      organisation: ""
+    };
+    setSelectedApplication(null);
+    setEditedApplication(newApplication);
+    setIsAddMode(true);
     setIsModalOpen(true);
   };
 
   const handleSave = () => {
     if (!editedApplication) return;
 
-    setApplications(prev => 
-      prev.map(app => 
-        app.id === editedApplication.id ? editedApplication : app
-      )
-    );
+    if (isAddMode) {
+      setApplications(prev => [...prev, editedApplication]);
+      toast.success("Application added successfully");
+    } else {
+      setApplications(prev => 
+        prev.map(app => 
+          app.id === editedApplication.id ? editedApplication : app
+        )
+      );
+      toast.success("Application updated successfully");
+    }
+    
     setIsModalOpen(false);
     setSelectedApplication(null);
     setEditedApplication(null);
-    toast.success("Application updated successfully");
+    setIsAddMode(false);
   };
 
   const handleDelete = () => {
@@ -110,8 +135,16 @@ const ApplicationHistory = () => {
       <main className="container mx-auto px-4 py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Application History</CardTitle>
-            <p className="text-muted-foreground">Track all your job applications in one place</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-2xl font-bold">Application History</CardTitle>
+                <p className="text-muted-foreground">Track all your job applications in one place</p>
+              </div>
+              <Button onClick={handleAddClick}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Application
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -160,7 +193,7 @@ const ApplicationHistory = () => {
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Application</DialogTitle>
+            <DialogTitle>{isAddMode ? "Add Application" : "Edit Application"}</DialogTitle>
           </DialogHeader>
           
           {editedApplication && (
@@ -223,16 +256,18 @@ const ApplicationHistory = () => {
           )}
           
           <DialogFooter className="flex gap-2">
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete
-            </Button>
+            {!isAddMode && (
+              <Button variant="destructive" onClick={handleDelete}>
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </Button>
+            )}
             <Button variant="outline" onClick={closeModal}>
               Cancel
             </Button>
             <Button onClick={handleSave}>
-              <Edit className="w-4 h-4 mr-2" />
-              Save Changes
+              <Plus className="w-4 h-4 mr-2" />
+              {isAddMode ? "Add Application" : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
