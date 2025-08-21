@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
 import { Progress } from './ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from './ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Switch } from './ui/switch';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, XCircle, FileText, Download, Edit3, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -20,6 +21,7 @@ interface GenerationOptions {
   pages: 2 | 3 | 4;
   includeKeywords: boolean;
   includeRelevantExperience: boolean;
+  language: string;
 }
 
 const ApplicationWizard = () => {
@@ -37,6 +39,7 @@ const ApplicationWizard = () => {
     pages: 2,
     includeKeywords: true,
     includeRelevantExperience: true,
+    language: 'UK English',
   });
   const [generatedCV, setGeneratedCV] = useState('');
   const [generatedCoverLetter, setGeneratedCoverLetter] = useState('');
@@ -430,60 +433,118 @@ Space X Project Contributor | NASA | 2021
         )}
       </div>
 
-      {/* Generation Options Modal */}
+      {/* CV Options Modal */}
       <Dialog open={showOptionsModal} onOpenChange={setShowOptionsModal}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Generation Options</DialogTitle>
+            <DialogTitle>CV Options</DialogTitle>
           </DialogHeader>
+          
           <div className="space-y-6 py-4">
-            <div>
-              <h4 className="font-medium mb-3">Number of Pages</h4>
-              <div className="flex gap-2">
-                {[2, 3, 4].map((pages) => (
-                  <Button
-                    key={pages}
-                    variant={generationOptions.pages === pages ? "default" : "outline"}
-                    onClick={() => setGenerationOptions(prev => ({ ...prev, pages: pages as 2 | 3 | 4 }))}
-                  >
-                    {pages} Pages
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label htmlFor="keywords" className="font-medium">
-                  Include Keywords
-                </label>
-                <Switch
-                  id="keywords"
-                  checked={generationOptions.includeKeywords}
-                  onCheckedChange={(checked) => 
-                    setGenerationOptions(prev => ({ ...prev, includeKeywords: checked }))
+            {/* Pages Option */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Pages:</label>
+              <ToggleGroup
+                type="single"
+                value={generationOptions.pages.toString()}
+                onValueChange={(value) => {
+                  if (value) {
+                    setGenerationOptions(prev => ({ ...prev, pages: parseInt(value) as 2 | 3 | 4 }));
                   }
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <label htmlFor="experience" className="font-medium">
-                  Include Relevant Experience
-                </label>
-                <Switch
-                  id="experience"
-                  checked={generationOptions.includeRelevantExperience}
-                  onCheckedChange={(checked) => 
-                    setGenerationOptions(prev => ({ ...prev, includeRelevantExperience: checked }))
-                  }
-                />
-              </div>
+                }}
+                className="justify-start"
+              >
+                <ToggleGroupItem value="2" aria-label="2 pages">
+                  2
+                </ToggleGroupItem>
+                <ToggleGroupItem value="3" aria-label="3 pages">
+                  3
+                </ToggleGroupItem>
+                <ToggleGroupItem value="4" aria-label="4 pages">
+                  4
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
-            
-            <Button onClick={handleGenerate} className="w-full">
-              Generate Documents
-            </Button>
+
+            {/* Include Keywords Option */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Include Keywords:</label>
+              <ToggleGroup
+                type="single"
+                value={generationOptions.includeKeywords ? "yes" : "no"}
+                onValueChange={(value) => {
+                  if (value) {
+                    setGenerationOptions(prev => ({ ...prev, includeKeywords: value === "yes" }));
+                  }
+                }}
+                className="justify-start"
+              >
+                <ToggleGroupItem value="yes" aria-label="Include keywords">
+                  Yes
+                </ToggleGroupItem>
+                <ToggleGroupItem value="no" aria-label="Don't include keywords">
+                  No
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+
+            {/* Include Relevant Experience Option */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Include Relevant Experience:</label>
+              <ToggleGroup
+                type="single"
+                value={generationOptions.includeRelevantExperience ? "yes" : "no"}
+                onValueChange={(value) => {
+                  if (value) {
+                    setGenerationOptions(prev => ({ ...prev, includeRelevantExperience: value === "yes" }));
+                  }
+                }}
+                className="justify-start"
+              >
+                <ToggleGroupItem value="yes" aria-label="Include relevant experience">
+                  Yes
+                </ToggleGroupItem>
+                <ToggleGroupItem value="no" aria-label="Don't include relevant experience">
+                  No
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+
+            {/* Language Option */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Language:</label>
+              <Select
+                value={generationOptions.language}
+                onValueChange={(value) => setGenerationOptions(prev => ({ ...prev, language: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="UK English">UK English</SelectItem>
+                  <SelectItem value="US English">US English</SelectItem>
+                  <SelectItem value="Canadian English">Canadian English</SelectItem>
+                  <SelectItem value="Australian English">Australian English</SelectItem>
+                  <SelectItem value="French">French</SelectItem>
+                  <SelectItem value="German">German</SelectItem>
+                  <SelectItem value="Spanish">Spanish</SelectItem>
+                  <SelectItem value="Italian">Italian</SelectItem>
+                  <SelectItem value="Portuguese">Portuguese</SelectItem>
+                  <SelectItem value="Dutch">Dutch</SelectItem>
+                  <SelectItem value="Swedish">Swedish</SelectItem>
+                  <SelectItem value="Norwegian">Norwegian</SelectItem>
+                  <SelectItem value="Danish">Danish</SelectItem>
+                  <SelectItem value="Finnish">Finnish</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+
+          <DialogFooter>
+            <Button onClick={handleGenerate} className="w-full">
+              OK
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
