@@ -50,9 +50,8 @@ const ApplicationWizard = () => {
 
   const steps = [
     { number: 1, title: 'Paste Job Description' },
-    { number: 2, title: 'Review Arc Data & Keywords' },
-    { number: 3, title: 'Generate Documents' },
-    { number: 4, title: 'Review & Download' },
+    { number: 2, title: 'Review Keywords' },
+    { number: 3, title: 'Review and Download' },
   ];
 
   const handleJobDescriptionNext = async () => {
@@ -147,7 +146,7 @@ Space X Project Contributor | NASA | 2021
         ));
       }
       
-      setCurrentStep(4);
+      setCurrentStep(3);
       setIsUpdating(false);
       setCvUpdateRequest('');
       setCoverLetterUpdateRequest('');
@@ -352,10 +351,10 @@ Space X Project Contributor | NASA | 2021
                   Request Updates
                 </Button>
                 <Button
-                  onClick={() => setCurrentStep(4)}
+                  onClick={() => window.location.href = '/cv-download'}
                   className="flex-1"
                 >
-                  Review & Download
+                  Go to downloads
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -363,54 +362,6 @@ Space X Project Contributor | NASA | 2021
           </Card>
         )}
 
-        {/* Step 4: Review & Download */}
-        {currentStep === 4 && (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Generated Documents</span>
-                  {jobTitle && (
-                    <div className="text-right">
-                      <div className="text-sm font-medium">{jobTitle}</div>
-                      <div className="text-sm text-muted-foreground">{companyName}</div>
-                    </div>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="cv" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="cv">Optimized CV</TabsTrigger>
-                    <TabsTrigger value="cover-letter">Cover Letter</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="cv" className="space-y-4">
-                    <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                      <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="cover-letter" className="space-y-4">
-                    <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                      <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-                
-                <div className="flex justify-center mt-6">
-                  <Button
-                    onClick={() => window.location.href = '/cv-download'}
-                    className="w-full"
-                  >
-                    Go to Download CVs Page
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
         {/* Loading state for step 3 */}
         {(currentStep === 3 && isGenerating) || isUpdating && (
