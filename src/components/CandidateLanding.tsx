@@ -1,543 +1,473 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, 
-  Play, 
-  CheckCircle, 
-  Zap, 
-  Shield, 
-  Target, 
-  Users, 
-  Clock,
-  Star,
-  FileText,
-  Brain,
-  Sparkles
-} from "lucide-react";
+import { Check, ArrowRight, Clock, Target, Shield, Briefcase, FileText, BarChart3, X, Menu } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-export function CandidateLanding() {
+export const CandidateLanding = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const mainPlans = [
+    {
+      name: "Free",
+      price: "£0",
+      period: "",
+      description: "Get started with basic access",
+      features: [
+        "3 credits per month",
+        "Up to 3 CVs per month",
+        "Every CV comes with a tailored cover letter",
+        "Every CV tailored to every job",
+        "Keep an archive of your complete career history",
+        "Basic access",
+        "DocX CV downloads",
+        "Email support"
+      ],
+      recommended: false,
+      buttonText: "Get Started Free",
+      buttonVariant: "default" as const
+    },
+    {
+      name: "Monthly",
+      price: "£24.99",
+      period: "per month",
+      description: "Perfect for career focused professionals",
+      features: [
+        "50 credits monthly recurring",
+        "3 credits per day",
+        "Create up to 140 CVs per month",
+        "Every CV comes with a tailored cover letter",
+        "Every CV tailored to every job",
+        "Keep an archive of your complete career history",
+        "Priority support",
+        "Advanced features",
+        "DocX CV downloads",
+        "Cancel anytime"
+      ],
+      recommended: true,
+      buttonText: "Start Monthly Plan",
+      buttonVariant: "default" as const
+    },
+    {
+      name: "Annual",
+      price: "£199",
+      period: "per year",
+      description: "Best value with 33% discount",
+      features: [
+        "50 credits monthly recurring",
+        "5 credits per day",
+        "Create up to 200 CVs per month",
+        "Every CV comes with a tailored cover letter",
+        "Every CV tailored to every job",
+        "Keep an archive of your complete career history",
+        "Priority support",
+        "Advanced features",
+        "DocX CV downloads",
+        "33% discount",
+        "Cancel anytime"
+      ],
+      recommended: false,
+      buttonText: "Choose Annual - Save 33%!",
+      buttonVariant: "default" as const
+    }
+  ];
+
+  const topUpPlan = {
+    name: "Top-up",
+    price: "£29.99",
+    period: "one-off",
+    description: "Pay as you go with no subscription",
+    features: [
+      "50 credits (one-off purchase)",
+      "No subscription required",
+      "Credits expire after 1 month",
+      "Can be added to any plan",
+      "Every CV comes with a tailored cover letter",
+      "Every CV tailored to every job",
+      "Keep an archive of your complete career history",
+      "DocX CV downloads",
+      "Email support"
+    ],
+    buttonText: "Buy Credits",
+    buttonVariant: "default" as const
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-primary">Candidate 5</div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#home" className="text-foreground hover:text-primary transition-colors">Home</a>
-              <a href="/career-arc" className="text-foreground hover:text-primary transition-colors">Career Arc</a>
-              <a href="/my-cvs" className="text-foreground hover:text-primary transition-colors">My CVs</a>
-              <Button variant="outline">Login</Button>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-primary">Candidate 5</h1>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <Link to="/" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium">
+                  Home
+                </Link>
+                <Link to="/career-arc" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium">
+                  Career Arc
+                </Link>
+                <Link to="/cv-download" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium">
+                  My CVs
+                </Link>
+              </div>
+            </div>
+
+            <div className="hidden md:block">
+              <Button variant="outline" className="mr-2">
+                Login
+              </Button>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
+                <Link to="/" className="text-muted-foreground hover:text-foreground block px-3 py-2 text-base font-medium">
+                  Home
+                </Link>
+                <Link to="/career-arc" className="text-muted-foreground hover:text-foreground block px-3 py-2 text-base font-medium">
+                  Career Arc
+                </Link>
+                <Link to="/cv-download" className="text-muted-foreground hover:text-foreground block px-3 py-2 text-base font-medium">
+                  My CVs
+                </Link>
+                <Button variant="outline" className="w-full mt-2">
+                  Login
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <Badge variant="success" className="gap-2">
-                <Sparkles className="h-3 w-3" />
-                AI-Powered Career Growth
-              </Badge>
-              
-              <h1 className="text-5xl lg:text-6xl font-bold text-card-foreground leading-tight">
-                Stop Rewriting, Start 
-                <span className="text-primary"> Applying</span>
-              </h1>
-              
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Land your dream job faster with Candidate 5 - CV. Our AI uses your unique Career Arc™ 
-                to craft perfectly tailored CVs and cover letters in minutes.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="gap-2 text-lg px-8 py-6">
-                  <CheckCircle className="h-5 w-5" />
-                  Create Your Free Account
-                </Button>
-                <Button variant="outline" size="lg" className="gap-2 text-lg px-8 py-6">
-                  <Play className="h-5 w-5" />
-                  See How It Works (60s)
-                </Button>
-              </div>
-
-              <p className="text-sm text-muted-foreground">
-                Join 10,000+ job seekers already optimizing their applications!
-              </p>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Eliminate Job Application <span className="text-primary">Time Waste</span>
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-4xl mx-auto">
+              Born out of the frustration from losing days of downtime between roles I wanted a tool that'd cut down the time it takes. For any role you're serious about it's worth putting the time in to get the cover letter and cv just right. Typically I'll spend 1 - 2 hours on each application and it's really boring repetitive work. Candidate 5 eliminates that wasted time and produces a quality cv that presents you in the best light.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg px-8 py-6">
+                Create Your Free Account
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
             </div>
-
-            <div className="relative">
-              <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border shadow-elevated">
-                <div className="bg-background rounded-2xl p-6 shadow-card">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-success rounded-full"></div>
-                      <div className="w-3 h-3 bg-warning rounded-full"></div>
-                      <div className="w-3 h-3 bg-destructive rounded-full"></div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="h-4 bg-muted rounded w-3/4"></div>
-                      <div className="h-4 bg-muted rounded w-full"></div>
-                      <div className="h-4 bg-muted rounded w-1/2"></div>
-                      <div className="h-6 bg-primary/20 rounded w-2/3"></div>
-                    </div>
-                  </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              Join now for free and get 3 CVs on our free tier and another each month for the casual job seeker.
+            </p>
+          </div>
+          
+          {/* Hero visual */}
+          <div className="mt-16 relative">
+            <div className="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-24 h-24 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Briefcase className="w-12 h-12 text-primary" />
                 </div>
-                <div className="absolute -top-4 -right-4 bg-primary rounded-full p-3 shadow-glow">
-                  <Brain className="h-6 w-6 text-primary-foreground" />
-                </div>
+                <p className="text-muted-foreground">AI Career Intelligence</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-12 border-y border-border/50 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="text-center text-muted-foreground mb-8">As seen on</p>
-          <div className="flex justify-center items-center gap-12 opacity-60">
-            <div className="h-8 w-24 bg-muted rounded"></div>
-            <div className="h-8 w-24 bg-muted rounded"></div>
-            <div className="h-8 w-24 bg-muted rounded"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Problem Statement */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-4xl font-bold text-card-foreground">
-            The Job Application Grind is Real. Candidate 5 - CV is Your Way Out.
-          </h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Spending hours tailoring your CV for each role? Worried your application will get lost in the ATS black hole? 
-            Juggling multiple CV versions? It's exhausting and inefficient. Candidate 5 automates the tedious parts, 
-            so you can focus on what matters: acing the interview.
-          </p>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4 bg-muted/20">
+      <section className="py-20 bg-muted/50 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-card-foreground mb-4">
-              Meet Your AI-Powered Application Toolkit
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Candidate5 Features
             </h2>
+            <p className="text-xl text-muted-foreground">
+              Everything you need to transform your job search
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300 shadow-card hover:shadow-elevated">
-              <CardContent className="p-8 space-y-6">
-                <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center">
-                  <Target className="h-8 w-8 text-primary" />
+          <div className="grid lg:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Briefcase className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold text-card-foreground">
-                  Build Once, Apply Perfectly, Forever
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Your Career Arc™ is your private, intelligent career repository. Upload your existing CVs 
-                  or add your experiences. Arc™ extracts, structures, and stores every skill and achievement.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Consolidate your entire career history
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Ensure consistency across applications
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Gets more powerful with every update
-                  </li>
-                </ul>
-              </CardContent>
+                <CardTitle>Creates a one stop profile - your career ark</CardTitle>
+                <CardDescription>
+                  Which stores the complete history of your career and past roles
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            {/* Feature 2 */}
-            <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300 shadow-card hover:shadow-elevated">
-              <CardContent className="p-8 space-y-6">
-                <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center">
-                  <Zap className="h-8 w-8 text-primary" />
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <BarChart3 className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold text-card-foreground">
-                  Tailored CVs & Cover Letters, Instantly
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Paste any job description, and let the Application Wizard work its magic. Our AI instantly 
-                  analyzes the role and generates perfectly optimized applications.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Beat Applicant Tracking Systems (ATS)
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Highlight relevant experiences
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Save hours per application
-                  </li>
-                </ul>
-              </CardContent>
+                <CardTitle>Gives you an ATS score for each role</CardTitle>
+                <CardDescription>
+                  Highlighting keywords and those you're missing
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            {/* Feature 3 */}
-            <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300 shadow-card hover:shadow-elevated">
-              <CardContent className="p-8 space-y-6">
-                <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center">
-                  <FileText className="h-8 w-8 text-primary" />
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold text-card-foreground">
-                  Your Master Career Profile, Always Ready
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  The Mega CV draws from your Arc™ to create a comprehensive master version of your resume, 
-                  perfect for networking and speculative applications.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Complete, always-current master document
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Ideal for diverse application needs
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Showcase the full breadth of experience
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-card-foreground mb-4">
-              Get Your Perfect Application in 3 Simple Steps
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto text-primary-foreground font-bold text-xl">
-                1
-              </div>
-              <h3 className="text-xl font-semibold text-card-foreground">Feed Your Arc™</h3>
-              <p className="text-muted-foreground">
-                Securely upload your existing CVs or manually add your career details. 
-                Our AI intelligently populates your personal Career Arc™.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto text-primary-foreground font-bold text-xl">
-                2
-              </div>
-              <h3 className="text-xl font-semibold text-card-foreground">Target Your Role</h3>
-              <p className="text-muted-foreground">
-                Find a job you love? Simply paste the job description into Candidate 5.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto text-primary-foreground font-bold text-xl">
-                3
-              </div>
-              <h3 className="text-xl font-semibold text-card-foreground">Apply with Confidence</h3>
-              <p className="text-muted-foreground">
-                Instantly generate a tailored CV and cover letter, optimized for the role. 
-                Download and apply!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Advantages */}
-      <section className="py-20 px-4 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-card-foreground mb-4">
-              The Candidate 5 - CV Advantage: More Than Just a CV Builder
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center p-6 shadow-card">
-              <CardContent className="space-y-4">
-                <Brain className="h-12 w-12 text-primary mx-auto" />
-                <h3 className="font-semibold text-card-foreground">Intelligent Personalization</h3>
-                <p className="text-sm text-muted-foreground">
-                  Go beyond templates. Create genuinely bespoke applications that reflect your true value.
-                </p>
-              </CardContent>
+                <CardTitle>Generates customised CVs and cover letters</CardTitle>
+                <CardDescription>
+                  Populated with the most relevant info from your career ark info to the requirements
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            <Card className="text-center p-6 shadow-card">
-              <CardContent className="space-y-4">
-                <Clock className="h-12 w-12 text-primary mx-auto" />
-                <h3 className="font-semibold text-card-foreground">Radical Time Savings</h3>
-                <p className="text-sm text-muted-foreground">
-                  Cut down application time from hours to mere minutes. Apply to more opportunities.
-                </p>
-              </CardContent>
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Target className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle>Creates a history of all your applications</CardTitle>
+                <CardDescription>
+                  Salary, date applied etc.. so you can keep track of your live apps
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            <Card className="text-center p-6 shadow-card">
-              <CardContent className="space-y-4">
-                <Users className="h-12 w-12 text-primary mx-auto" />
-                <h3 className="font-semibold text-card-foreground">Career Long Companion</h3>
-                <p className="text-sm text-muted-foreground">
-                  Your Career Arc™ evolves with you, making each future application stronger and smarter.
-                </p>
-              </CardContent>
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle>CVs tailored precisely to each role</CardTitle>
+                <CardDescription>
+                  Highlighting your relevant skills and pruning those that don't quite match
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            <Card className="text-center p-6 shadow-card">
-              <CardContent className="space-y-4">
-                <Shield className="h-12 w-12 text-primary mx-auto" />
-                <h3 className="font-semibold text-card-foreground">Your Data, Your Control</h3>
-                <p className="text-sm text-muted-foreground">
-                  We prioritize your privacy. Your Career Arc™ is your secure, personal career database.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-card-foreground mb-4">
-              Don't Just Take Our Word For It...
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="shadow-card">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-warning text-warning" />
-                  ))}
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Clock className="w-6 h-6 text-primary" />
                 </div>
-                <p className="text-muted-foreground">
-                  "Candidate 5 is a game-changer! I landed three interviews in my first week using it. 
-                  The tailored CVs make a huge difference."
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    SK
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">Sarah K.</p>
-                    <p className="text-xs text-muted-foreground">Marketing Manager</p>
-                  </div>
-                </div>
-              </CardContent>
+                <CardTitle>Set your cv length and controls</CardTitle>
+                <CardDescription>
+                  Whether or not to include keywords and use bespoke tweaks
+                </CardDescription>
+              </CardHeader>
             </Card>
 
-            <Card className="shadow-card">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-warning text-warning" />
-                  ))}
+            <Card>
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6 text-primary" />
                 </div>
-                <p className="text-muted-foreground">
-                  "I used to spend hours on every application. Now it takes minutes and I get more callbacks."
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    JT
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">James T.</p>
-                    <p className="text-xs text-muted-foreground">Software Engineer</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-card">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-warning text-warning" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground">
-                  "The Career Arc keeps all my experience organized. I feel so much more confident applying!"
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    PS
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">Priya S.</p>
-                    <p className="text-xs text-muted-foreground">Recent Grad</p>
-                  </div>
-                </div>
-              </CardContent>
+                <CardTitle>Multi-language support</CardTitle>
+                <CardDescription>
+                  Request your CV to be translated into 12 supported languages
+                </CardDescription>
+              </CardHeader>
             </Card>
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-20 px-4 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-card-foreground mb-4">
-              Find the Perfect Plan to Launch Your Next Career Move
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Choose Your Plan
             </h2>
+            <p className="text-xl text-muted-foreground">
+              Select the perfect plan for your career journey. All plans include our AI-powered CV and cover letter generation.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Starter Plan */}
-            <Card className="shadow-card">
-              <CardContent className="p-8 space-y-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-card-foreground">Career Starter</h3>
-                  <div className="text-3xl font-bold text-primary mt-2">Free</div>
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {mainPlans.map((plan, index) => (
+              <Card key={index} className={`relative flex flex-col ${plan.recommended ? 'border-primary shadow-lg scale-105' : ''}`}>
+                {plan.recommended && (
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
+                    Most Popular
+                  </Badge>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="text-2xl font-bold text-foreground">
+                    {plan.name}
+                  </CardTitle>
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold text-primary">
+                      {plan.price}
+                    </div>
+                    <p className="text-muted-foreground">{plan.period}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {plan.description}
+                    </p>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="flex flex-col flex-1 justify-between space-y-6">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-center space-x-3">
+                        <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                        <span className="text-foreground text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    variant={plan.buttonVariant} 
+                    className="w-full"
+                    size="lg"
+                  >
+                    {plan.buttonText}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="max-w-md mx-auto mb-12">
+            <Card className="border-dashed border-2">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold text-foreground">
+                  {topUpPlan.name}
+                </CardTitle>
+                <div className="space-y-2">
+                  <div className="text-3xl font-bold text-primary">
+                    {topUpPlan.price}
+                  </div>
+                  <p className="text-muted-foreground">{topUpPlan.period}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {topUpPlan.description}
+                  </p>
                 </div>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
                 <ul className="space-y-3">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Build your Career Arc™
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Basic CV parsing
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    1 tailored application per month
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Email support
-                  </li>
+                  {topUpPlan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center space-x-3">
+                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                      <span className="text-foreground text-sm">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
-                <Button className="w-full" variant="outline">
-                  Get Started with Career Starter
+                
+                <Button 
+                  variant={topUpPlan.buttonVariant} 
+                  className="w-full"
+                  size="lg"
+                >
+                  {topUpPlan.buttonText}
                 </Button>
               </CardContent>
             </Card>
+          </div>
 
-            {/* Accelerator Plan */}
-            <Card className="shadow-card border-2 border-primary relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+          <Card className="max-w-4xl mx-auto">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-center">
+                All Plans Include
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">AI-powered CV generation</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Tailored cover letters</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Keyword matching analysis</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Career Arc profile management</span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Professional DocX exports</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Mobile-responsive interface</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Secure data storage</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-primary" />
+                    <span className="text-foreground">Regular platform updates</span>
+                  </div>
+                </div>
               </div>
-              <CardContent className="p-8 space-y-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-card-foreground">Career Accelerator</h3>
-                  <div className="text-3xl font-bold text-primary mt-2">£14.99<span className="text-lg text-muted-foreground">/mo</span></div>
-                </div>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Unlimited tailored applications
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Advanced AI optimization
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Priority support
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Access to Application Wizard
-                  </li>
-                </ul>
-                <Button className="w-full">
-                  Get Started with Career Accelerator
-                </Button>
-              </CardContent>
-            </Card>
+            </CardContent>
+          </Card>
 
-            {/* Dominator Plan */}
-            <Card className="shadow-card">
-              <CardContent className="p-8 space-y-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-card-foreground">Career Dominator</h3>
-                  <div className="text-3xl font-bold text-primary mt-2">£29.99<span className="text-lg text-muted-foreground">/mo</span></div>
-                </div>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Everything in Accelerator
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    1:1 expert review
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Early access to new features
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
-                    Personalized job search insights
-                  </li>
-                </ul>
-                <Button className="w-full" variant="outline">
-                  Get Started with Career Dominator
-                </Button>
-              </CardContent>
-            </Card>
+          <div className="text-center mt-12">
+            <p className="text-muted-foreground mb-4">
+              Questions about our pricing? <a href="/faq" className="text-primary hover:underline">Check our FAQ</a> or contact us.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              All prices are in GBP. Cancel anytime. 30-day money-back guarantee.
+            </p>
           </div>
-
-          <p className="text-center text-muted-foreground mt-8">
-            All plans start with a 7-day free trial. Cancel anytime.
-          </p>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl font-bold text-card-foreground">
+      <section className="py-20 bg-muted/50 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Transform Your Job Search?
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Stop letting tedious applications hold you back. Join Candidate 5 today and start applying 
-            smarter, faster, and with more confidence.
+          <p className="text-xl text-muted-foreground mb-8">
+            Join thousands of professionals who've accelerated their careers with Candidate 5
           </p>
-          <Button size="lg" className="gap-2 text-lg px-8 py-6">
-            Sign Up for Your Free Trial Now
-            <ArrowRight className="h-5 w-5" />
+          <Button size="lg" className="text-lg px-8 py-6">
+            Start Your Free Trial Today
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <p className="text-sm text-muted-foreground">
-            No credit card required for trial. Takes less than 2 minutes to get started.
+          <p className="text-sm text-muted-foreground mt-4">
+            No credit card required • 3 free CVs included • Cancel anytime
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 bg-muted/30 py-8 px-4">
+      <footer className="border-t py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-muted-foreground">
             © 2024 Candidate 5. All rights reserved.
@@ -546,4 +476,4 @@ export function CandidateLanding() {
       </footer>
     </div>
   );
-}
+};
