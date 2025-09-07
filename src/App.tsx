@@ -18,6 +18,7 @@ import FAQ from "./pages/FAQ";
 import Pricing from "./pages/Pricing";
 import ApplicationHistory from "./pages/ApplicationHistory";
 import NotFound from "./pages/NotFound";
+import { NewLanding } from "./components/NewLanding";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
+          <Route path="/" element={<NewLanding />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/landing" element={<Index />} />
           <Route path="/career-arc" element={<CareerArc />} />
           <Route path="/application-wizard" element={<ApplicationWizardPage />} />
