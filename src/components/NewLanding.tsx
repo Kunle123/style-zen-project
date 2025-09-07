@@ -52,19 +52,19 @@ export const NewLanding = () => {
           {/* Stats Section */}
           <div className="grid md:grid-cols-3 gap-8 mb-20">
             <div className="text-center">
-              <div className="text-6xl md:text-7xl font-bold text-primary mb-4">80%</div>
+              <div className="text-6xl md:text-7xl font-bold text-black mb-4">80%</div>
               <div className="text-xl text-muted-foreground mb-6">CVs never seen</div>
               <img src={cvFunnelIcon} alt="CVs being filtered out" className="w-24 h-24 mx-auto" />
             </div>
             
             <div className="text-center">
-              <div className="text-6xl md:text-7xl font-bold text-primary mb-4">8s</div>
+              <div className="text-6xl md:text-7xl font-bold text-black mb-4">8s</div>
               <div className="text-xl text-muted-foreground mb-6">Average view time</div>
               <img src={timerIcon} alt="8 second timer" className="w-24 h-24 mx-auto" />
             </div>
             
             <div className="text-center">
-              <div className="text-6xl md:text-7xl font-bold text-primary mb-4">28 days</div>
+              <div className="text-6xl md:text-7xl font-bold text-black mb-4">28 days</div>
               <div className="text-xl text-muted-foreground mb-6">Avg. time to find a job</div>
               <img src={calendarMoneyIcon} alt="Calendar with money" className="w-24 h-24 mx-auto" />
             </div>
