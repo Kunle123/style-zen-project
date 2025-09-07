@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, FileText, Target, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
-import celebratingProfessional from "@/assets/celebrating-professional-new.jpg";
+import celebratingProfessional from "@/assets/celebrating-professional-golden.jpg";
 import timerIcon from "@/assets/timer-8s-icon.png";
 import cvFunnelIcon from "@/assets/cv-funnel-icon.png";
 import calendarMoneyIcon from "@/assets/calendar-money-icon.png";
