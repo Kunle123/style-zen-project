@@ -22,9 +22,6 @@ export const NewLanding = () => {
               <Button variant="golden">
                 Start Free - Build My CV
               </Button>
-              <Button variant="golden">
-                Get Started Free
-              </Button>
             </div>
           </div>
         </div>
