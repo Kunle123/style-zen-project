@@ -3,9 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, FileText, Target, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import celebratingProfessional from "@/assets/celebrating-professional.jpg";
-import cvFolderIcon from "@/assets/cv-folder-icon.png";
-import timerIcon from "@/assets/timer-icon.png";
-import calendarIcon from "@/assets/calendar-icon.png";
+import timerIcon from "@/assets/timer-8s-icon.png";
+import cvFunnelIcon from "@/assets/cv-funnel-icon.png";
+import calendarMoneyIcon from "@/assets/calendar-money-icon.png";
 
 export const NewLanding = () => {
   return (
@@ -57,19 +57,19 @@ export const NewLanding = () => {
             <div className="text-center">
               <div className="text-6xl md:text-7xl font-bold text-primary mb-4">80%</div>
               <div className="text-xl text-muted-foreground mb-6">CVs never seen</div>
-              <img src={cvFolderIcon} alt="CV folder icon" className="w-20 h-20 mx-auto" />
+              <img src={cvFunnelIcon} alt="CVs being filtered out" className="w-24 h-24 mx-auto" />
             </div>
             
             <div className="text-center">
               <div className="text-6xl md:text-7xl font-bold text-primary mb-4">8s</div>
               <div className="text-xl text-muted-foreground mb-6">Average view time</div>
-              <img src={timerIcon} alt="Timer icon" className="w-20 h-20 mx-auto" />
+              <img src={timerIcon} alt="8 second timer" className="w-24 h-24 mx-auto" />
             </div>
             
             <div className="text-center">
               <div className="text-6xl md:text-7xl font-bold text-primary mb-4">28 days</div>
               <div className="text-xl text-muted-foreground mb-6">Avg. time to find a job</div>
-              <img src={calendarIcon} alt="Calendar icon" className="w-20 h-20 mx-auto" />
+              <img src={calendarMoneyIcon} alt="Calendar with money" className="w-24 h-24 mx-auto" />
             </div>
           </div>
 
@@ -90,6 +90,34 @@ export const NewLanding = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Button size="lg">Sign Up</Button>
               <Button variant="outline" size="lg">Download</Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Introduction */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              See Candidate 5 in Action
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Watch how easy it is to create a tailored CV in minutes
+            </p>
+          </div>
+          
+          <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-primary-foreground ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+                <p className="text-muted-foreground">Introduction to Candidate 5</p>
+                <p className="text-sm text-muted-foreground mt-2">Click to play video</p>
+              </div>
             </div>
           </div>
         </div>
