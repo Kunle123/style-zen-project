@@ -87,9 +87,8 @@ export const NewLanding = () => {
                 The <strong>28 days spent searching</strong> can be costly, is often fraught and is very intense work.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button size="lg">Sign Up</Button>
-              <Button variant="outline" size="lg">Download</Button>
+            <div className="flex justify-center mt-8">
+              <Button size="lg">Get My Free CVs</Button>
             </div>
           </div>
         </div>
