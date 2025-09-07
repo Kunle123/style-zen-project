@@ -19,10 +19,10 @@ export const NewLanding = () => {
             </div>
             
             <div className="flex items-center gap-4">
-              <Button variant="outline">
+              <Button variant="golden">
                 Start Free - Build My CV
               </Button>
-              <Button>
+              <Button variant="golden">
                 Get Started Free
               </Button>
             </div>
@@ -88,7 +88,7 @@ export const NewLanding = () => {
               </p>
             </div>
             <div className="flex justify-center mt-8">
-              <Button size="lg">Get My Free CVs</Button>
+              <Button variant="golden" size="lg">Get My Free CVs</Button>
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@ export const NewLanding = () => {
           <p className="text-xl text-muted-foreground mb-8">
             Instantly tailor. Start for free.
           </p>
-          <Button size="lg" className="text-lg px-8 py-6">
+          <Button variant="golden" size="lg" className="text-lg px-8 py-6">
             Start Free - Build My CV
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
