@@ -1,7 +1,7 @@
-import { CandidateLanding } from "@/components/CandidateLanding";
+import { NewLanding } from "@/components/NewLanding";
 
 const Index = () => {
-  return <CandidateLanding />;
+  return <NewLanding />;
 };
 
 export default Index;
