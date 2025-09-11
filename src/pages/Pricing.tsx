@@ -105,83 +105,83 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
           {mainPlans.map((plan, index) => (
-            <Card key={index} className={`relative flex flex-col ${plan.recommended ? 'border-primary shadow-lg scale-105' : ''}`}>
+            <Card key={index} className={`relative flex flex-col h-full ${plan.recommended ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'hover:shadow-md transition-shadow'}`}>
               {plan.recommended && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1">
                   Most Popular
                 </Badge>
               )}
               
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-2xl font-bold text-foreground">
+                <CardTitle className="text-xl font-semibold text-foreground">
                   {plan.name}
                 </CardTitle>
-                <div className="space-y-2">
-                  <div className="text-4xl font-bold text-primary">
+                <div className="space-y-1">
+                  <div className="text-3xl font-bold text-foreground">
                     {plan.price}
                   </div>
-                  <p className="text-muted-foreground">{plan.period}</p>
-                  <p className="text-sm text-muted-foreground">
+                  {plan.period && (
+                    <p className="text-sm text-muted-foreground">{plan.period}</p>
+                  )}
+                  <p className="text-sm text-muted-foreground pt-2">
                     {plan.description}
                   </p>
                 </div>
               </CardHeader>
               
-              <CardContent className="flex flex-col flex-1 justify-between space-y-6">
-                <ul className="space-y-3">
+              <CardContent className="flex flex-col flex-1 justify-between pt-0">
+                <ul className="space-y-2 mb-6">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className="h-5 w-5 text-success flex-shrink-0" />
-                      <span className="text-foreground text-sm">{feature}</span>
+                    <li key={featureIndex} className="flex items-start space-x-2">
+                      <Check className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                      <span className="text-foreground text-sm leading-relaxed">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <Button 
                   variant={plan.buttonVariant} 
-                  className="w-full"
-                  size="lg"
+                  className="w-full mt-auto"
+                  size="default"
                 >
                   {plan.buttonText}
                 </Button>
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        <div className="max-w-md mx-auto mb-12">
-          <Card className="border-dashed border-2">
+          
+          <Card className="relative flex flex-col h-full">
             <CardHeader className="text-center pb-4">
-              <CardTitle className="text-xl font-bold text-foreground">
+              <CardTitle className="text-xl font-semibold text-foreground">
                 {topUpPlan.name}
               </CardTitle>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">
+              <div className="space-y-1">
+                <div className="text-3xl font-bold text-foreground">
                   {topUpPlan.price}
                 </div>
-                <p className="text-muted-foreground">{topUpPlan.period}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">{topUpPlan.period}</p>
+                <p className="text-sm text-muted-foreground pt-2">
                   {topUpPlan.description}
                 </p>
               </div>
             </CardHeader>
             
-            <CardContent className="space-y-6">
-              <ul className="space-y-3">
+            <CardContent className="flex flex-col flex-1 justify-between pt-0">
+              <ul className="space-y-2 mb-6">
                 {topUpPlan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center space-x-3">
-                    <Check className="h-5 w-5 text-success flex-shrink-0" />
-                    <span className="text-foreground text-sm">{feature}</span>
+                  <li key={featureIndex} className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground text-sm leading-relaxed">{feature}</span>
                   </li>
                 ))}
               </ul>
               
               <Button 
                 variant={topUpPlan.buttonVariant} 
-                className="w-full"
-                size="lg"
+                className="w-full mt-auto"
+                size="default"
               >
                 {topUpPlan.buttonText}
               </Button>
