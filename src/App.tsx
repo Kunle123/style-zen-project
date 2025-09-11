@@ -18,6 +18,7 @@ import FAQ from "./pages/FAQ";
 import Pricing from "./pages/Pricing";
 import ApplicationHistory from "./pages/ApplicationHistory";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 import { NewLanding } from "./components/NewLanding";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/faq" element={<FAQ />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/application-history" element={<ApplicationHistory />} />
+          <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
