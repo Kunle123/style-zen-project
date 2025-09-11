@@ -1,13 +1,20 @@
 import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
 export function AuthToggle() {
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  // Replace with your actual reCAPTCHA site key
+  const RECAPTCHA_SITE_KEY = "your-recaptcha-site-key-here";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -44,9 +51,16 @@ export function AuthToggle() {
                   disabled={isLoading}
                 />
               </div>
+              <div className="space-y-4">
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(value) => setRecaptchaValue(value)}
+                />
+              </div>
+              
               <Button 
                 className="w-full" 
-                disabled={isLoading}
+                disabled={isLoading || !recaptchaValue}
                 onClick={() => setIsLoading(true)}
               >
                 {isLoading ? "Signing in..." : "Sign In"}
@@ -76,15 +90,6 @@ export function AuthToggle() {
             
             <TabsContent value="register" className="space-y-4 mt-6">
               <div className="space-y-2">
-                <Label htmlFor="register-name">Full Name</Label>
-                <Input
-                  id="register-name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="register-email">Email</Label>
                 <Input
                   id="register-email"
@@ -111,9 +116,35 @@ export function AuthToggle() {
                   disabled={isLoading}
                 />
               </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="terms" 
+                  checked={agreeToTerms}
+                  onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
+                />
+                <Label htmlFor="terms" className="text-sm">
+                  I agree to the{" "}
+                  <Button variant="link" className="p-0 h-auto text-sm">
+                    Terms of Service
+                  </Button>{" "}
+                  and{" "}
+                  <Button variant="link" className="p-0 h-auto text-sm">
+                    Privacy Policy
+                  </Button>
+                </Label>
+              </div>
+
+              <div className="space-y-4">
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(value) => setRecaptchaValue(value)}
+                />
+              </div>
+              
               <Button 
                 className="w-full" 
-                disabled={isLoading}
+                disabled={isLoading || !agreeToTerms || !recaptchaValue}
                 onClick={() => setIsLoading(true)}
               >
                 {isLoading ? "Creating account..." : "Create Account"}
@@ -133,17 +164,6 @@ export function AuthToggle() {
               <Button variant="outline" className="w-full">
                 Continue with Google
               </Button>
-              
-              <p className="text-xs text-center text-muted-foreground">
-                By creating an account, you agree to our{" "}
-                <Button variant="link" className="p-0 h-auto text-xs">
-                  Terms of Service
-                </Button>{" "}
-                and{" "}
-                <Button variant="link" className="p-0 h-auto text-xs">
-                  Privacy Policy
-                </Button>
-              </p>
             </TabsContent>
           </Tabs>
         </CardContent>
