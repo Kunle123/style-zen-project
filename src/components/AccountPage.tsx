@@ -512,10 +512,75 @@ export function AccountPage() {
 
               <Separator />
 
+              {/* Pricing Plans Section */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium">Choose Your Plan</h4>
+                
+                <div className="grid gap-3">
+                  {/* Free Plan */}
+                  <div className="p-4 border rounded-lg bg-muted/30">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h5 className="font-medium text-sm">Free</h5>
+                        <p className="text-xs text-muted-foreground">£0</p>
+                      </div>
+                      <Badge variant="outline" className="text-xs">Current</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">3 credits per month, basic access</p>
+                    <Button variant="outline" size="sm" disabled className="w-full text-xs">
+                      Current Plan
+                    </Button>
+                  </div>
+
+                  {/* Monthly Plan */}
+                  <div className="p-4 border rounded-lg hover:bg-muted/20">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h5 className="font-medium text-sm">Monthly</h5>
+                        <p className="text-xs text-muted-foreground">£24.99/month</p>
+                      </div>
+                      <Badge variant="default" className="text-xs bg-primary">Popular</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">50 credits monthly, 3 daily, priority support</p>
+                    <Button variant="default" size="sm" className="w-full text-xs">
+                      Upgrade to Monthly
+                    </Button>
+                  </div>
+
+                  {/* Annual Plan */}
+                  <div className="p-4 border rounded-lg hover:bg-muted/20">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h5 className="font-medium text-sm">Annual</h5>
+                        <p className="text-xs text-muted-foreground">£199/year</p>
+                      </div>
+                      <Badge variant="secondary" className="text-xs">Save 33%</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">50 credits monthly, 5 daily, priority support</p>
+                    <Button variant="default" size="sm" className="w-full text-xs">
+                      Upgrade to Annual
+                    </Button>
+                  </div>
+
+                  {/* Top-up Plan */}
+                  <div className="p-4 border rounded-lg hover:bg-muted/20">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h5 className="font-medium text-sm">Top-up</h5>
+                        <p className="text-xs text-muted-foreground">£29.99 one-off</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">50 credits, no subscription, expires in 1 month</p>
+                    <Button variant="outline" size="sm" className="w-full text-xs">
+                      Buy Credits
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
               <div className="space-y-3">
-                <Button variant="outline" className="w-full">
-                  Upgrade Plan
-                </Button>
                 <Button variant="outline" className="w-full">
                   Manage Payment Methods
                 </Button>
