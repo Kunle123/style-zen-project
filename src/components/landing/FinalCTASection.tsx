@@ -1,42 +1,53 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const FinalCTASection = () => {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary/5 to-primary-glow/5">
+    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-primary text-primary-foreground">
       <div className="max-w-4xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <Clock className="w-6 h-6 text-primary" />
-          <span className="text-lg font-semibold text-primary">Don't Get Lost</span>
-        </div>
-        
-        <h2 className="text-3xl md:text-5xl font-bold mb-6">
-          Start Free Today
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">
+          Start a job posting
         </h2>
         
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          While you're reading this, <strong>thousands of CVs are being filtered out</strong>. 
-          Make sure yours isn't one of them.
+        <p className="text-base md:text-lg mb-8 md:mb-12 opacity-90 max-w-2xl mx-auto">
+          Post a job and get matched with qualified candidates instantly
         </p>
         
+        {/* Job Posting Form */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 md:p-8 mb-8 md:mb-12">
+          <div className="space-y-4 max-w-md mx-auto">
+            <Input 
+              placeholder="Job title" 
+              className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+            />
+            <Input 
+              placeholder="Company name" 
+              className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+            />
+            <Input 
+              placeholder="Location" 
+              className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+            />
+            <Button variant="secondary" className="w-full text-primary font-semibold">
+              Post Job
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Alternative CTA */}
         <div className="space-y-4">
-          <Button asChild size="lg" className="text-lg px-12 py-6">
+          <p className="text-sm md:text-base opacity-75">
+            Or start building your CV today
+          </p>
+          <Button asChild size="lg" variant="secondary" className="text-base md:text-lg px-6 md:px-8 py-3 md:py-4">
             <Link to="/application-wizard">
               Start Free - Build My CV
-              <ArrowRight className="ml-2 h-6 w-6" />
+              <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
             </Link>
           </Button>
-          
-          <p className="text-sm text-muted-foreground">
-            ✓ No credit card required &nbsp;•&nbsp; ✓ Cancel anytime &nbsp;•&nbsp; ✓ Start in 30 seconds
-          </p>
-        </div>
-        
-        <div className="mt-12 p-6 bg-warning-light rounded-lg border border-warning/20">
-          <p className="text-warning-foreground font-medium">
-            ⚠️ <strong>Every day you wait costs money.</strong> The average professional loses £104 per day while job searching.
-          </p>
         </div>
       </div>
     </section>
