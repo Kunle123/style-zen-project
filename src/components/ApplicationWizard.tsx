@@ -29,6 +29,13 @@ interface GenerationOptions {
   };
 }
 
+interface GeneratedDocuments {
+  [key: string]: {
+    cv: string;
+    coverLetter: string;
+  };
+}
+
 const ApplicationWizard = () => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
@@ -48,8 +55,8 @@ const ApplicationWizard = () => {
       education: true,
     },
   });
-  const [generatedCV, setGeneratedCV] = useState('');
-  const [generatedCoverLetter, setGeneratedCoverLetter] = useState('');
+  const [generatedDocuments, setGeneratedDocuments] = useState<GeneratedDocuments>({});
+  const [selectedVariant, setSelectedVariant] = useState<string>('medium-all');
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [cvUpdateRequest, setCvUpdateRequest] = useState('');
   const [coverLetterUpdateRequest, setCoverLetterUpdateRequest] = useState('');
@@ -87,12 +94,37 @@ const ApplicationWizard = () => {
     }, 2000);
   };
 
+  const generateVariantKey = (length: string, sections: GenerationOptions['sections']) => {
+    const sectionKeys = Object.entries(sections)
+      .filter(([_, value]) => value)
+      .map(([key, _]) => key)
+      .sort()
+      .join('-');
+    return `${length}-${sectionKeys}`;
+  };
+
   const handleGenerate = async () => {
     setIsGenerating(true);
+    setCurrentStep(3);
     
-    // Simulate document generation
+    // Generate all possible combinations
+    const lengths = ['short', 'medium', 'long'];
+    const sectionCombinations = [
+      { achievements: true, competencies: true, certifications: true, education: true },
+      { achievements: true, competencies: true, certifications: false, education: true },
+      { achievements: false, competencies: true, certifications: true, education: true },
+      // Add more combinations as needed
+    ];
+    
+    // Simulate document generation for all variants
     setTimeout(() => {
-      setGeneratedCV(`JOHN DOE
+      const newDocuments: GeneratedDocuments = {};
+      
+      lengths.forEach(length => {
+        sectionCombinations.forEach(sections => {
+          const variantKey = generateVariantKey(length, sections);
+          
+          const baseCV = `JOHN DOE
 Senior Full Stack Developer
 
 EXPERIENCE
@@ -103,12 +135,36 @@ Software Engineer | Current Company | 2022-Present
 • Increased application performance by 40%
 
 SKILLS
-React, TypeScript, Node.js, Docker, Agile Development
+React, TypeScript, Node.js, Docker, Agile Development`;
 
-EDUCATION
-Computer Science Degree | University | 2018-2022`);
-
-      setGeneratedCoverLetter(`Dear Hiring Manager,
+          let cv = baseCV;
+          
+          if (sections.achievements) {
+            cv += `\n\nACHIEVEMENTS\n• Improved system performance by 40%\n• Led team of 5 developers`;
+          }
+          
+          if (sections.competencies) {
+            cv += `\n\nCOMPETENCIES\n• Technical Leadership\n• Agile Methodology\n• Problem Solving`;
+          }
+          
+          if (sections.certifications) {
+            cv += `\n\nCERTIFICATIONS\n• AWS Certified Developer\n• React Professional Certificate`;
+          }
+          
+          if (sections.education) {
+            cv += `\n\nEDUCATION\nComputer Science Degree | University | 2018-2022`;
+          }
+          
+          // Adjust length
+          if (length === 'short') {
+            cv = cv.substring(0, cv.length * 0.7);
+          } else if (length === 'long') {
+            cv += `\n\nADDITIONAL EXPERIENCE\nIntern | Previous Company | 2021\n• Developed web applications\n• Learned modern frameworks`;
+          }
+          
+          newDocuments[variantKey] = {
+            cv,
+            coverLetter: `Dear Hiring Manager,
 
 I am writing to express my strong interest in the Senior Full Stack Developer position at TechCorp Inc. With my extensive experience in React, TypeScript, and modern development practices, I am confident I would be a valuable addition to your team.
 
@@ -117,13 +173,18 @@ In my current role, I have successfully built scalable applications and worked w
 I would welcome the opportunity to discuss how my skills and experience can benefit TechCorp Inc.
 
 Best regards,
-John Doe`);
+John Doe`
+          };
+        });
+      });
       
+      setGeneratedDocuments(newDocuments);
+      setSelectedVariant(generateVariantKey('medium', generationOptions.sections));
       setIsGenerating(false);
       
       toast({
         title: "Documents Generated",
-        description: "Your CV and cover letter have been successfully generated!",
+        description: "All CV variations have been successfully generated!",
       });
     }, 3000);
   };
@@ -139,16 +200,26 @@ John Doe`);
     // Simulate AI processing updates
     setTimeout(() => {
       if (cvUpdateRequest.trim()) {
-        setGeneratedCV(prev => prev + `\n\nADDITIONAL EXPERIENCE
-Space X Project Contributor | NASA | 2021
-• ${cvUpdateRequest}`);
+        setGeneratedDocuments(prev => ({
+          ...prev,
+          [selectedVariant]: {
+            ...prev[selectedVariant],
+            cv: prev[selectedVariant]?.cv + `\n\nADDITIONAL EXPERIENCE\nSpace X Project Contributor | NASA | 2021\n• ${cvUpdateRequest}`
+          }
+        }));
       }
       
       if (coverLetterUpdateRequest.trim()) {
-        setGeneratedCoverLetter(prev => prev.replace(
-          'Best regards,',
-          `Additionally, I want to highlight my experience: ${coverLetterUpdateRequest}\n\nBest regards,`
-        ));
+        setGeneratedDocuments(prev => ({
+          ...prev,
+          [selectedVariant]: {
+            ...prev[selectedVariant],
+            coverLetter: prev[selectedVariant]?.coverLetter.replace(
+              'Best regards,',
+              `Additionally, I want to highlight my experience: ${coverLetterUpdateRequest}\n\nBest regards,`
+            )
+          }
+        }));
       }
       
       setCurrentStep(3);
@@ -299,10 +370,10 @@ Space X Project Contributor | NASA | 2021
 
                     <div className="flex justify-end">
                       <Button
-                        onClick={() => setCurrentStep(3)}
+                        onClick={handleGenerate}
                         className="w-full"
                       >
-                        Next: Generate Documents
+                        Generate Documents
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
@@ -339,9 +410,10 @@ Space X Project Contributor | NASA | 2021
                         <Label className="text-sm font-medium">Page Length:</Label>
                         <RadioGroup
                           value={generationOptions.length}
-                          onValueChange={(value: 'short' | 'medium' | 'long') => 
-                            setGenerationOptions(prev => ({ ...prev, length: value }))
-                          }
+                          onValueChange={(value: 'short' | 'medium' | 'long') => {
+                            setGenerationOptions(prev => ({ ...prev, length: value }));
+                            setSelectedVariant(generateVariantKey(value, generationOptions.sections));
+                          }}
                           className="flex gap-6"
                         >
                           <div className="flex items-center space-x-2">
@@ -367,12 +439,11 @@ Space X Project Contributor | NASA | 2021
                             <Checkbox
                               id="achievements"
                               checked={generationOptions.sections.achievements}
-                              onCheckedChange={(checked) => 
-                                setGenerationOptions(prev => ({
-                                  ...prev,
-                                  sections: { ...prev.sections, achievements: checked as boolean }
-                                }))
-                              }
+                              onCheckedChange={(checked) => {
+                                const newSections = { ...generationOptions.sections, achievements: checked as boolean };
+                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                              }}
                             />
                             <Label htmlFor="achievements">Achievements</Label>
                           </div>
@@ -380,12 +451,11 @@ Space X Project Contributor | NASA | 2021
                             <Checkbox
                               id="competencies"
                               checked={generationOptions.sections.competencies}
-                              onCheckedChange={(checked) => 
-                                setGenerationOptions(prev => ({
-                                  ...prev,
-                                  sections: { ...prev.sections, competencies: checked as boolean }
-                                }))
-                              }
+                              onCheckedChange={(checked) => {
+                                const newSections = { ...generationOptions.sections, competencies: checked as boolean };
+                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                              }}
                             />
                             <Label htmlFor="competencies">Competencies</Label>
                           </div>
@@ -393,12 +463,11 @@ Space X Project Contributor | NASA | 2021
                             <Checkbox
                               id="certifications"
                               checked={generationOptions.sections.certifications}
-                              onCheckedChange={(checked) => 
-                                setGenerationOptions(prev => ({
-                                  ...prev,
-                                  sections: { ...prev.sections, certifications: checked as boolean }
-                                }))
-                              }
+                              onCheckedChange={(checked) => {
+                                const newSections = { ...generationOptions.sections, certifications: checked as boolean };
+                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                              }}
                             />
                             <Label htmlFor="certifications">Certifications</Label>
                           </div>
@@ -406,12 +475,11 @@ Space X Project Contributor | NASA | 2021
                             <Checkbox
                               id="education"
                               checked={generationOptions.sections.education}
-                              onCheckedChange={(checked) => 
-                                setGenerationOptions(prev => ({
-                                  ...prev,
-                                  sections: { ...prev.sections, education: checked as boolean }
-                                }))
-                              }
+                              onCheckedChange={(checked) => {
+                                const newSections = { ...generationOptions.sections, education: checked as boolean };
+                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                              }}
                             />
                             <Label htmlFor="education">Education</Label>
                           </div>
@@ -422,7 +490,7 @@ Space X Project Contributor | NASA | 2021
                 </Accordion>
 
                 {/* Document Preview */}
-                {generatedCV ? (
+                {generatedDocuments[selectedVariant] ? (
                   <div className="space-y-4">
                     <Tabs defaultValue="cv" className="w-full">
                       <TabsList className="grid w-full grid-cols-2">
@@ -430,17 +498,17 @@ Space X Project Contributor | NASA | 2021
                         <TabsTrigger value="cover-letter">Generated Cover Letter</TabsTrigger>
                       </TabsList>
                       
-                      <TabsContent value="cv" className="space-y-4">
-                        <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                          <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
-                        </div>
-                      </TabsContent>
-                      
-                      <TabsContent value="cover-letter" className="space-y-4">
-                        <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                          <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
-                        </div>
-                      </TabsContent>
+                       <TabsContent value="cv" className="space-y-4">
+                         <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
+                           <pre className="whitespace-pre-wrap text-sm">{generatedDocuments[selectedVariant]?.cv}</pre>
+                         </div>
+                       </TabsContent>
+                       
+                       <TabsContent value="cover-letter" className="space-y-4">
+                         <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
+                           <pre className="whitespace-pre-wrap text-sm">{generatedDocuments[selectedVariant]?.coverLetter}</pre>
+                         </div>
+                       </TabsContent>
                     </Tabs>
                   </div>
                 ) : (
@@ -451,7 +519,7 @@ Space X Project Contributor | NASA | 2021
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                  {generatedCV ? (
+                  {generatedDocuments[selectedVariant] ? (
                     <>
                       <Button
                         variant="outline"
