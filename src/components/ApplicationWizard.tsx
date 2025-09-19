@@ -344,8 +344,8 @@ John Doe`
                       <h3 className="text-lg font-semibold">Match Score</h3>
                       <div className="flex items-center gap-2">
                         <div className={`text-2xl font-bold ${
-                          matchScore >= 70 ? 'text-green-600' : 
-                          matchScore >= 50 ? 'text-yellow-600' : 'text-red-600'
+                          matchScore >= 70 ? 'text-emerald-500' : 
+                          matchScore >= 50 ? 'text-amber-500' : 'text-rose-500'
                         }`}>
                           {matchScore}%
                         </div>
@@ -552,20 +552,6 @@ John Doe`
         )}
 
 
-        {/* Loading state for analyzing */}
-        {currentStep === 2 && isAnalyzing && (
-          <Card>
-            <CardContent className="py-12">
-              <div className="text-center space-y-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                <h3 className="text-lg font-semibold">Analyzing Job Description</h3>
-                <p className="text-muted-foreground">
-                  Please wait while we extract keywords and analyze the requirements...
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Loading state for generating */}
         {currentStep === 3 && isGenerating && (
