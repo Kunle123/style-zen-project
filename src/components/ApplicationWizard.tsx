@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, XCircle, FileText, Download, Edit3, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -21,9 +21,6 @@ interface Keyword {
 
 interface GenerationOptions {
   length: 'short' | 'medium' | 'long';
-  includeKeywords: boolean;
-  includeRelevantExperience: boolean;
-  language: string;
   sections: {
     achievements: boolean;
     competencies: boolean;
@@ -44,9 +41,6 @@ const ApplicationWizard = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationOptions, setGenerationOptions] = useState<GenerationOptions>({
     length: 'medium',
-    includeKeywords: true,
-    includeRelevantExperience: true,
-    language: 'UK English',
     sections: {
       achievements: true,
       competencies: true,
@@ -320,199 +314,165 @@ Space X Project Contributor | NASA | 2021
         )}
 
         {/* Step 3: Preview */}
-        {currentStep === 3 && !isGenerating && !isUpdating && !generatedCV && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Step 3: Preview</span>
-                {jobTitle && (
-                  <div className="text-right">
-                    <div className="text-sm font-medium">{jobTitle}</div>
-                    <div className="text-sm text-muted-foreground">{companyName}</div>
+        {currentStep === 3 && !isGenerating && !isUpdating && (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Step 3: Preview</span>
+                  {jobTitle && (
+                    <div className="text-right">
+                      <div className="text-sm font-medium">{jobTitle}</div>
+                      <div className="text-sm text-muted-foreground">{companyName}</div>
+                    </div>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {!generatedCV ? (
+                  <div className="space-y-6">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="options">
+                        <AccordionTrigger>CV Options</AccordionTrigger>
+                        <AccordionContent className="space-y-6 pt-4">
+                          {/* Page Length */}
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Page Length:</Label>
+                            <RadioGroup
+                              value={generationOptions.length}
+                              onValueChange={(value: 'short' | 'medium' | 'long') => 
+                                setGenerationOptions(prev => ({ ...prev, length: value }))
+                              }
+                              className="flex gap-6"
+                            >
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="short" id="short" />
+                                <Label htmlFor="short">Short</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="medium" id="medium" />
+                                <Label htmlFor="medium">Medium</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="long" id="long" />
+                                <Label htmlFor="long">Long</Label>
+                              </div>
+                            </RadioGroup>
+                          </div>
+
+                          {/* CV Sections */}
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Include sections in CV:</Label>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="achievements"
+                                  checked={generationOptions.sections.achievements}
+                                  onCheckedChange={(checked) => 
+                                    setGenerationOptions(prev => ({
+                                      ...prev,
+                                      sections: { ...prev.sections, achievements: checked as boolean }
+                                    }))
+                                  }
+                                />
+                                <Label htmlFor="achievements">Achievements</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="competencies"
+                                  checked={generationOptions.sections.competencies}
+                                  onCheckedChange={(checked) => 
+                                    setGenerationOptions(prev => ({
+                                      ...prev,
+                                      sections: { ...prev.sections, competencies: checked as boolean }
+                                    }))
+                                  }
+                                />
+                                <Label htmlFor="competencies">Competencies</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="certifications"
+                                  checked={generationOptions.sections.certifications}
+                                  onCheckedChange={(checked) => 
+                                    setGenerationOptions(prev => ({
+                                      ...prev,
+                                      sections: { ...prev.sections, certifications: checked as boolean }
+                                    }))
+                                  }
+                                />
+                                <Label htmlFor="certifications">Certifications</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="education"
+                                  checked={generationOptions.sections.education}
+                                  onCheckedChange={(checked) => 
+                                    setGenerationOptions(prev => ({
+                                      ...prev,
+                                      sections: { ...prev.sections, education: checked as boolean }
+                                    }))
+                                  }
+                                />
+                                <Label htmlFor="education">Education</Label>
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+
+                    {/* Generate Button */}
+                    <Button
+                      onClick={handleGenerate}
+                      className="w-full"
+                    >
+                      Generate CV & Cover Letter
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <Tabs defaultValue="cv" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="cv">Generated CV</TabsTrigger>
+                        <TabsTrigger value="cover-letter">Generated Cover Letter</TabsTrigger>
+                      </TabsList>
+                      
+                      <TabsContent value="cv" className="space-y-4">
+                        <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
+                          <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
+                        </div>
+                      </TabsContent>
+                      
+                      <TabsContent value="cover-letter" className="space-y-4">
+                        <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
+                          <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
+                        </div>
+                      </TabsContent>
+                    </Tabs>
+                    
+                    <div className="flex gap-4">
+                      <Button
+                        variant="outline"
+                        onClick={handleRequestUpdates}
+                      >
+                        <Edit3 className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={() => window.location.href = '/cv-download'}
+                        className="flex-1"
+                      >
+                        Go to downloads
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
                   </div>
                 )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Page Length */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Page Length:</Label>
-                <RadioGroup
-                  value={generationOptions.length}
-                  onValueChange={(value: 'short' | 'medium' | 'long') => 
-                    setGenerationOptions(prev => ({ ...prev, length: value }))
-                  }
-                  className="flex gap-6"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="short" id="short" />
-                    <Label htmlFor="short">Short</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="medium" id="medium" />
-                    <Label htmlFor="medium">Medium</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="long" id="long" />
-                    <Label htmlFor="long">Long</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              {/* CV Sections */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Include sections in CV:</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="achievements"
-                      checked={generationOptions.sections.achievements}
-                      onCheckedChange={(checked) => 
-                        setGenerationOptions(prev => ({
-                          ...prev,
-                          sections: { ...prev.sections, achievements: checked as boolean }
-                        }))
-                      }
-                    />
-                    <Label htmlFor="achievements">Achievements</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="competencies"
-                      checked={generationOptions.sections.competencies}
-                      onCheckedChange={(checked) => 
-                        setGenerationOptions(prev => ({
-                          ...prev,
-                          sections: { ...prev.sections, competencies: checked as boolean }
-                        }))
-                      }
-                    />
-                    <Label htmlFor="competencies">Competencies</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="certifications"
-                      checked={generationOptions.sections.certifications}
-                      onCheckedChange={(checked) => 
-                        setGenerationOptions(prev => ({
-                          ...prev,
-                          sections: { ...prev.sections, certifications: checked as boolean }
-                        }))
-                      }
-                    />
-                    <Label htmlFor="certifications">Certifications</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="education"
-                      checked={generationOptions.sections.education}
-                      onCheckedChange={(checked) => 
-                        setGenerationOptions(prev => ({
-                          ...prev,
-                          sections: { ...prev.sections, education: checked as boolean }
-                        }))
-                      }
-                    />
-                    <Label htmlFor="education">Education</Label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Language Selection */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Language:</Label>
-                <Select
-                  value={generationOptions.language}
-                  onValueChange={(value) => 
-                    setGenerationOptions(prev => ({ ...prev, language: value }))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="UK English">UK English</SelectItem>
-                    <SelectItem value="US English">US English</SelectItem>
-                    <SelectItem value="French">French</SelectItem>
-                    <SelectItem value="German">German</SelectItem>
-                    <SelectItem value="Spanish">Spanish</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Generate Button */}
-              <div className="flex gap-4 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentStep(2)}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
-                <Button
-                  onClick={handleGenerate}
-                  className="flex-1"
-                >
-                  Generate CV & Cover Letter
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Generated Documents */}
-        {currentStep === 3 && !isGenerating && !isUpdating && generatedCV && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Documents Generated</span>
-                {jobTitle && (
-                  <div className="text-right">
-                    <div className="text-sm font-medium">{jobTitle}</div>
-                    <div className="text-sm text-muted-foreground">{companyName}</div>
-                  </div>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="cv" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="cv">Generated CV</TabsTrigger>
-                  <TabsTrigger value="cover-letter">Generated Cover Letter</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="cv" className="space-y-4">
-                  <div className="border rounded-lg p-4 bg-muted/50 min-h-[300px]">
-                    <pre className="whitespace-pre-wrap text-sm">{generatedCV}</pre>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="cover-letter" className="space-y-4">
-                  <div className="border rounded-lg p-4 bg-muted/50 min-h-[300px]">
-                    <pre className="whitespace-pre-wrap text-sm">{generatedCoverLetter}</pre>
-                  </div>
-                </TabsContent>
-              </Tabs>
-              
-              <div className="flex gap-4 mt-6">
-                <Button
-                  variant="outline"
-                  onClick={handleRequestUpdates}
-                >
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Request Updates
-                </Button>
-                <Button
-                  onClick={() => window.location.href = '/cv-download'}
-                  className="flex-1"
-                >
-                  Go to downloads
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
 
@@ -562,11 +522,11 @@ Space X Project Contributor | NASA | 2021
         )}
       </div>
 
-      {/* Update Request Modal */}
+      {/* Edit Request Modal */}
       <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Request Document Updates</DialogTitle>
+            <DialogTitle>Edit Documents</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
