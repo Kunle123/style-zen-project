@@ -7,7 +7,9 @@ import { Textarea } from './ui/textarea';
 import { Progress } from './ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from './ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Checkbox } from './ui/checkbox';
+import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, XCircle, FileText, Download, Edit3, ArrowRight, ArrowLeft } from 'lucide-react';
@@ -18,10 +20,16 @@ interface Keyword {
 }
 
 interface GenerationOptions {
-  pages: 2 | 3 | 4;
+  length: 'short' | 'medium' | 'long';
   includeKeywords: boolean;
   includeRelevantExperience: boolean;
   language: string;
+  sections: {
+    achievements: boolean;
+    competencies: boolean;
+    certifications: boolean;
+    education: boolean;
+  };
 }
 
 const ApplicationWizard = () => {
@@ -34,12 +42,17 @@ const ApplicationWizard = () => {
   const [companyName, setCompanyName] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [generationOptions, setGenerationOptions] = useState<GenerationOptions>({
-    pages: 2,
+    length: 'medium',
     includeKeywords: true,
     includeRelevantExperience: true,
     language: 'UK English',
+    sections: {
+      achievements: true,
+      competencies: true,
+      certifications: true,
+      education: true,
+    },
   });
   const [generatedCV, setGeneratedCV] = useState('');
   const [generatedCoverLetter, setGeneratedCoverLetter] = useState('');
@@ -51,7 +64,7 @@ const ApplicationWizard = () => {
   const steps = [
     { number: 1, title: 'Paste Job Description' },
     { number: 2, title: 'Review Keywords' },
-    { number: 3, title: 'Review and Download' },
+    { number: 3, title: 'Preview' },
   ];
 
   const handleJobDescriptionNext = async () => {
@@ -82,8 +95,6 @@ const ApplicationWizard = () => {
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    setShowOptionsModal(false);
-    setCurrentStep(3);
     
     // Simulate document generation
     setTimeout(() => {
@@ -294,10 +305,10 @@ Space X Project Contributor | NASA | 2021
 
                     <div className="flex justify-end">
                       <Button
-                        onClick={() => setShowOptionsModal(true)}
+                        onClick={() => setCurrentStep(3)}
                         className="w-full"
                       >
-                        Generate CV & Cover Letter
+                        Next: Generate Documents
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
@@ -308,8 +319,150 @@ Space X Project Contributor | NASA | 2021
           </div>
         )}
 
-        {/* Step 3: Generate Documents */}
-        {currentStep === 3 && !isGenerating && !isUpdating && (
+        {/* Step 3: Preview */}
+        {currentStep === 3 && !isGenerating && !isUpdating && !generatedCV && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Step 3: Preview</span>
+                {jobTitle && (
+                  <div className="text-right">
+                    <div className="text-sm font-medium">{jobTitle}</div>
+                    <div className="text-sm text-muted-foreground">{companyName}</div>
+                  </div>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Page Length */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Page Length:</Label>
+                <RadioGroup
+                  value={generationOptions.length}
+                  onValueChange={(value: 'short' | 'medium' | 'long') => 
+                    setGenerationOptions(prev => ({ ...prev, length: value }))
+                  }
+                  className="flex gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="short" id="short" />
+                    <Label htmlFor="short">Short</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="medium" id="medium" />
+                    <Label htmlFor="medium">Medium</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="long" id="long" />
+                    <Label htmlFor="long">Long</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {/* CV Sections */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Include sections in CV:</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="achievements"
+                      checked={generationOptions.sections.achievements}
+                      onCheckedChange={(checked) => 
+                        setGenerationOptions(prev => ({
+                          ...prev,
+                          sections: { ...prev.sections, achievements: checked as boolean }
+                        }))
+                      }
+                    />
+                    <Label htmlFor="achievements">Achievements</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="competencies"
+                      checked={generationOptions.sections.competencies}
+                      onCheckedChange={(checked) => 
+                        setGenerationOptions(prev => ({
+                          ...prev,
+                          sections: { ...prev.sections, competencies: checked as boolean }
+                        }))
+                      }
+                    />
+                    <Label htmlFor="competencies">Competencies</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="certifications"
+                      checked={generationOptions.sections.certifications}
+                      onCheckedChange={(checked) => 
+                        setGenerationOptions(prev => ({
+                          ...prev,
+                          sections: { ...prev.sections, certifications: checked as boolean }
+                        }))
+                      }
+                    />
+                    <Label htmlFor="certifications">Certifications</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="education"
+                      checked={generationOptions.sections.education}
+                      onCheckedChange={(checked) => 
+                        setGenerationOptions(prev => ({
+                          ...prev,
+                          sections: { ...prev.sections, education: checked as boolean }
+                        }))
+                      }
+                    />
+                    <Label htmlFor="education">Education</Label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Language Selection */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Language:</Label>
+                <Select
+                  value={generationOptions.language}
+                  onValueChange={(value) => 
+                    setGenerationOptions(prev => ({ ...prev, language: value }))
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="UK English">UK English</SelectItem>
+                    <SelectItem value="US English">US English</SelectItem>
+                    <SelectItem value="French">French</SelectItem>
+                    <SelectItem value="German">German</SelectItem>
+                    <SelectItem value="Spanish">Spanish</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Generate Button */}
+              <div className="flex gap-4 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(2)}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+                <Button
+                  onClick={handleGenerate}
+                  className="flex-1"
+                >
+                  Generate CV & Cover Letter
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Generated Documents */}
+        {currentStep === 3 && !isGenerating && !isUpdating && generatedCV && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -363,20 +516,45 @@ Space X Project Contributor | NASA | 2021
         )}
 
 
-        {/* Loading state for step 3 */}
-        {(currentStep === 3 && isGenerating) || isUpdating && (
+        {/* Loading state for analyzing */}
+        {currentStep === 2 && isAnalyzing && (
           <Card>
             <CardContent className="py-12">
               <div className="text-center space-y-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                <h3 className="text-lg font-semibold">
-                  {isUpdating ? 'Updating Your Documents' : 'Generating Your Documents'}
-                </h3>
+                <h3 className="text-lg font-semibold">Analyzing Job Description</h3>
                 <p className="text-muted-foreground">
-                  {isUpdating 
-                    ? 'Please wait while we apply your requested updates...'
-                    : 'Please wait while we create your optimized CV and cover letter...'
-                  }
+                  Please wait while we extract keywords and analyze the requirements...
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading state for generating */}
+        {currentStep === 3 && isGenerating && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <h3 className="text-lg font-semibold">Generating Your Documents</h3>
+                <p className="text-muted-foreground">
+                  Please wait while we create your optimized CV and cover letter...
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading state for updating */}
+        {isUpdating && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <h3 className="text-lg font-semibold">Updating Your Documents</h3>
+                <p className="text-muted-foreground">
+                  Please wait while we apply your requested updates...
                 </p>
               </div>
             </CardContent>
@@ -384,175 +562,46 @@ Space X Project Contributor | NASA | 2021
         )}
       </div>
 
-      {/* CV Options Modal */}
-      <Dialog open={showOptionsModal} onOpenChange={setShowOptionsModal}>
+      {/* Update Request Modal */}
+      <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>CV Options</DialogTitle>
+            <DialogTitle>Request Document Updates</DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-6 py-4">
-            {/* Pages Option */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium">Pages:</label>
-              <ToggleGroup
-                type="single"
-                value={generationOptions.pages.toString()}
-                onValueChange={(value) => {
-                  if (value) {
-                    setGenerationOptions(prev => ({ ...prev, pages: parseInt(value) as 2 | 3 | 4 }));
-                  }
-                }}
-                className="justify-start"
-              >
-                <ToggleGroupItem value="2" aria-label="2 pages">
-                  2
-                </ToggleGroupItem>
-                <ToggleGroupItem value="3" aria-label="3 pages">
-                  3
-                </ToggleGroupItem>
-                <ToggleGroupItem value="4" aria-label="4 pages">
-                  4
-                </ToggleGroupItem>
-              </ToggleGroup>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">CV Updates:</label>
+              <Textarea
+                placeholder="Describe any changes you'd like to make to your CV..."
+                value={cvUpdateRequest}
+                onChange={(e) => setCvUpdateRequest(e.target.value)}
+                className="min-h-[100px]"
+              />
             </div>
-
-            {/* Include Keywords Option */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium">Include Keywords:</label>
-              <ToggleGroup
-                type="single"
-                value={generationOptions.includeKeywords ? "yes" : "no"}
-                onValueChange={(value) => {
-                  if (value) {
-                    setGenerationOptions(prev => ({ ...prev, includeKeywords: value === "yes" }));
-                  }
-                }}
-                className="justify-start"
-              >
-                <ToggleGroupItem value="yes" aria-label="Include keywords">
-                  Yes
-                </ToggleGroupItem>
-                <ToggleGroupItem value="no" aria-label="Don't include keywords">
-                  No
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-
-            {/* Include Relevant Experience Option */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium">Include Relevant Experience:</label>
-              <ToggleGroup
-                type="single"
-                value={generationOptions.includeRelevantExperience ? "yes" : "no"}
-                onValueChange={(value) => {
-                  if (value) {
-                    setGenerationOptions(prev => ({ ...prev, includeRelevantExperience: value === "yes" }));
-                  }
-                }}
-                className="justify-start"
-              >
-                <ToggleGroupItem value="yes" aria-label="Include relevant experience">
-                  Yes
-                </ToggleGroupItem>
-                <ToggleGroupItem value="no" aria-label="Don't include relevant experience">
-                  No
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-
-            {/* Language Option */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium">Language:</label>
-              <Select
-                value={generationOptions.language}
-                onValueChange={(value) => setGenerationOptions(prev => ({ ...prev, language: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UK English">UK English</SelectItem>
-                  <SelectItem value="US English">US English</SelectItem>
-                  <SelectItem value="Canadian English">Canadian English</SelectItem>
-                  <SelectItem value="Australian English">Australian English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                  <SelectItem value="German">German</SelectItem>
-                  <SelectItem value="Spanish">Spanish</SelectItem>
-                  <SelectItem value="Italian">Italian</SelectItem>
-                  <SelectItem value="Portuguese">Portuguese</SelectItem>
-                  <SelectItem value="Dutch">Dutch</SelectItem>
-                  <SelectItem value="Swedish">Swedish</SelectItem>
-                  <SelectItem value="Norwegian">Norwegian</SelectItem>
-                  <SelectItem value="Danish">Danish</SelectItem>
-                  <SelectItem value="Finnish">Finnish</SelectItem>
-                </SelectContent>
-              </Select>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Cover Letter Updates:</label>
+              <Textarea
+                placeholder="Describe any changes you'd like to make to your cover letter..."
+                value={coverLetterUpdateRequest}
+                onChange={(e) => setCoverLetterUpdateRequest(e.target.value)}
+                className="min-h-[100px]"
+              />
             </div>
           </div>
 
           <DialogFooter>
-            <Button onClick={handleGenerate} className="w-full">
-              OK
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button 
+              onClick={handleApplyUpdates}
+              disabled={!cvUpdateRequest.trim() && !coverLetterUpdateRequest.trim()}
+            >
+              Apply Updates
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Update Request Modal */}
-      <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Request Document Updates</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6 py-4">
-            <p className="text-muted-foreground">
-              Provide specific updates you'd like to see in your CV and cover letter. The AI will incorporate your requests into the documents.
-            </p>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  CV Updates
-                </label>
-                <Textarea
-                  placeholder="e.g., Please include worked at Space X on a project whilst at NASA..."
-                  value={cvUpdateRequest}
-                  onChange={(e) => setCvUpdateRequest(e.target.value)}
-                  className="min-h-[100px]"
-                />
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Cover Letter Updates
-                </label>
-                <Textarea
-                  placeholder="e.g., Mention my experience with machine learning projects..."
-                  value={coverLetterUpdateRequest}
-                  onChange={(e) => setCoverLetterUpdateRequest(e.target.value)}
-                  className="min-h-[100px]"
-                />
-              </div>
-            </div>
-            
-            <div className="flex gap-3">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowUpdateModal(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleApplyUpdates}
-                disabled={!cvUpdateRequest.trim() && !coverLetterUpdateRequest.trim()}
-                className="flex-1"
-              >
-                Apply Updates
-              </Button>
-            </div>
-          </div>
         </DialogContent>
       </Dialog>
     </div>
