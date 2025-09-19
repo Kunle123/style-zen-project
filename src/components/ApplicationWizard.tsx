@@ -328,111 +328,102 @@ Space X Project Contributor | NASA | 2021
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                {!generatedCV ? (
-                  <div className="space-y-6">
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="options">
-                        <AccordionTrigger>CV Options</AccordionTrigger>
-                        <AccordionContent className="space-y-6 pt-4">
-                          {/* Page Length */}
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium">Page Length:</Label>
-                            <RadioGroup
-                              value={generationOptions.length}
-                              onValueChange={(value: 'short' | 'medium' | 'long') => 
-                                setGenerationOptions(prev => ({ ...prev, length: value }))
+              <CardContent className="space-y-6">
+                {/* CV Options Accordion */}
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="options">
+                    <AccordionTrigger>CV Options</AccordionTrigger>
+                    <AccordionContent className="space-y-6 pt-4">
+                      {/* Page Length */}
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">Page Length:</Label>
+                        <RadioGroup
+                          value={generationOptions.length}
+                          onValueChange={(value: 'short' | 'medium' | 'long') => 
+                            setGenerationOptions(prev => ({ ...prev, length: value }))
+                          }
+                          className="flex gap-6"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="short" id="short" />
+                            <Label htmlFor="short">Short</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="medium" id="medium" />
+                            <Label htmlFor="medium">Medium</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="long" id="long" />
+                            <Label htmlFor="long">Long</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      {/* CV Sections */}
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">Include sections in CV:</Label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="achievements"
+                              checked={generationOptions.sections.achievements}
+                              onCheckedChange={(checked) => 
+                                setGenerationOptions(prev => ({
+                                  ...prev,
+                                  sections: { ...prev.sections, achievements: checked as boolean }
+                                }))
                               }
-                              className="flex gap-6"
-                            >
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="short" id="short" />
-                                <Label htmlFor="short">Short</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="medium" id="medium" />
-                                <Label htmlFor="medium">Medium</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="long" id="long" />
-                                <Label htmlFor="long">Long</Label>
-                              </div>
-                            </RadioGroup>
+                            />
+                            <Label htmlFor="achievements">Achievements</Label>
                           </div>
-
-                          {/* CV Sections */}
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium">Include sections in CV:</Label>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id="achievements"
-                                  checked={generationOptions.sections.achievements}
-                                  onCheckedChange={(checked) => 
-                                    setGenerationOptions(prev => ({
-                                      ...prev,
-                                      sections: { ...prev.sections, achievements: checked as boolean }
-                                    }))
-                                  }
-                                />
-                                <Label htmlFor="achievements">Achievements</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id="competencies"
-                                  checked={generationOptions.sections.competencies}
-                                  onCheckedChange={(checked) => 
-                                    setGenerationOptions(prev => ({
-                                      ...prev,
-                                      sections: { ...prev.sections, competencies: checked as boolean }
-                                    }))
-                                  }
-                                />
-                                <Label htmlFor="competencies">Competencies</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id="certifications"
-                                  checked={generationOptions.sections.certifications}
-                                  onCheckedChange={(checked) => 
-                                    setGenerationOptions(prev => ({
-                                      ...prev,
-                                      sections: { ...prev.sections, certifications: checked as boolean }
-                                    }))
-                                  }
-                                />
-                                <Label htmlFor="certifications">Certifications</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id="education"
-                                  checked={generationOptions.sections.education}
-                                  onCheckedChange={(checked) => 
-                                    setGenerationOptions(prev => ({
-                                      ...prev,
-                                      sections: { ...prev.sections, education: checked as boolean }
-                                    }))
-                                  }
-                                />
-                                <Label htmlFor="education">Education</Label>
-                              </div>
-                            </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="competencies"
+                              checked={generationOptions.sections.competencies}
+                              onCheckedChange={(checked) => 
+                                setGenerationOptions(prev => ({
+                                  ...prev,
+                                  sections: { ...prev.sections, competencies: checked as boolean }
+                                }))
+                              }
+                            />
+                            <Label htmlFor="competencies">Competencies</Label>
                           </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="certifications"
+                              checked={generationOptions.sections.certifications}
+                              onCheckedChange={(checked) => 
+                                setGenerationOptions(prev => ({
+                                  ...prev,
+                                  sections: { ...prev.sections, certifications: checked as boolean }
+                                }))
+                              }
+                            />
+                            <Label htmlFor="certifications">Certifications</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="education"
+                              checked={generationOptions.sections.education}
+                              onCheckedChange={(checked) => 
+                                setGenerationOptions(prev => ({
+                                  ...prev,
+                                  sections: { ...prev.sections, education: checked as boolean }
+                                }))
+                              }
+                            />
+                            <Label htmlFor="education">Education</Label>
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
-                    {/* Generate Button */}
-                    <Button
-                      onClick={handleGenerate}
-                      className="w-full"
-                    >
-                      Generate CV & Cover Letter
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
+                {/* Document Preview */}
+                {generatedCV ? (
+                  <div className="space-y-4">
                     <Tabs defaultValue="cv" className="w-full">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="cv">Generated CV</TabsTrigger>
@@ -451,8 +442,17 @@ Space X Project Contributor | NASA | 2021
                         </div>
                       </TabsContent>
                     </Tabs>
-                    
-                    <div className="flex gap-4">
+                  </div>
+                ) : (
+                  <div className="border rounded-lg p-8 bg-muted/50 text-center">
+                    <p className="text-muted-foreground">Your documents will appear here after generation</p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-4">
+                  {generatedCV ? (
+                    <>
                       <Button
                         variant="outline"
                         onClick={handleRequestUpdates}
@@ -467,9 +467,17 @@ Space X Project Contributor | NASA | 2021
                         Go to downloads
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
-                    </div>
-                  </div>
-                )}
+                    </>
+                  ) : (
+                    <Button
+                      onClick={handleGenerate}
+                      className="w-full"
+                    >
+                      Generate CV & Cover Letter
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
