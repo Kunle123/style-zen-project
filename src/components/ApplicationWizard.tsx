@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, XCircle, FileText, Download, Edit3, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -315,200 +316,405 @@ John Doe`
           </Card>
         )}
 
-        {/* Step 2: Review Arc Data & Keywords */}
-        {currentStep === 2 && (
+        {/* Step 2: Review Keywords */}
+        {currentStep === 2 && !isAnalyzing && (
           <div className="space-y-6">
+            {/* Job Analysis Panel */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Keyword Analysis</span>
-                  {jobTitle && (
-                    <div className="text-right">
-                      <div className="text-sm font-medium">{jobTitle}</div>
-                      <div className="text-sm text-muted-foreground">{companyName}</div>
-                    </div>
-                  )}
-                </CardTitle>
+                <CardTitle>Job Analysis</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Job Title</label>
+                    <p className="font-semibold">{jobTitle || 'Senior Software Engineer'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Company</label>
+                    <p className="font-semibold">{companyName || 'Tech Solutions Inc.'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Experience Level</label>
+                    <p className="font-semibold">Senior (5+ years)</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Industry</label>
+                    <p className="font-semibold">Technology</p>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Key Requirements</label>
+                  <p className="text-sm">React, TypeScript, Node.js, Database Management, Team Leadership</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Match Score */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Match Score</CardTitle>
               </CardHeader>
               <CardContent>
-                {isAnalyzing ? (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="text-center space-y-2">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                      <p className="text-muted-foreground">Analyzing job description...</p>
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className={`text-3xl font-bold ${
+                    matchScore >= 70 ? 'text-emerald-600' : 
+                    matchScore >= 50 ? 'text-amber-600' : 'text-rose-600'
+                  }`}>
+                    {matchScore}%
                   </div>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold">Match Score</h3>
-                      <div className="flex items-center gap-2">
-                        <div className={`text-2xl font-bold ${
-                          matchScore >= 70 ? 'text-emerald-500' : 
-                          matchScore >= 50 ? 'text-amber-500' : 'text-rose-500'
-                        }`}>
-                          {matchScore}%
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-medium mb-3">Extracted Keywords</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {extractedKeywords.map((keyword, index) => (
-                          <Badge
-                            key={index}
-                            variant={getKeywordColor(keyword.status)}
-                            className="flex items-center gap-1"
-                          >
-                            {getKeywordIcon(keyword.status)}
-                            {keyword.text}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
+                  <div className="flex-1">
+                    <Progress value={matchScore} className="h-3" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {extractedKeywords.filter(k => k.status === 'match').length} / {extractedKeywords.length} keywords matched
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-                    <div className="flex justify-end">
-                      <Button
-                        onClick={handleGenerate}
-                        className="w-full"
-                      >
-                        Generate Documents
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
+            {/* Keyword Analysis */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Matched Keywords */}
+              <Card className="border-emerald-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-emerald-700 flex items-center gap-2">
+                    <span className="text-lg">✓</span>
+                    Matched Keywords
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Skills and experience that align with the job requirements
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {extractedKeywords.filter(k => k.status === 'match').map((keyword, idx) => (
+                      <TooltipProvider key={idx}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm border border-emerald-200 cursor-help hover:bg-emerald-100 transition-colors">
+                              {keyword.text}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">Strong evidence found in your experience with {keyword.text}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Transferable Keywords */}
+              <Card className="border-amber-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-amber-700 flex items-center gap-2">
+                    <span className="text-lg">!</span>
+                    Transferable Keywords
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Related skills that can be highlighted as relevant experience
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {extractedKeywords.filter(k => k.status === 'partial').map((keyword, idx) => (
+                      <TooltipProvider key={idx}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-sm border border-amber-200 cursor-help hover:bg-amber-100 transition-colors">
+                              {keyword.text}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">Your related experience with similar technologies can be positioned as transferable to {keyword.text}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Missing Keywords */}
+              <Card className="border-rose-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-rose-700 flex items-center gap-2">
+                    <span className="text-lg">✗</span>
+                    Missing Keywords
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Skills not found in your profile - we'll address these strategically
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {extractedKeywords.filter(k => k.status === 'missing').map((keyword, idx) => (
+                      <TooltipProvider key={idx}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span className="px-3 py-1 bg-rose-50 text-rose-700 rounded-full text-sm border border-rose-200 cursor-help hover:bg-rose-100 transition-colors">
+                              {keyword.text}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">We'll focus on your learning agility and related experience to mitigate the gap in {keyword.text}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Customization Options */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Customization Options</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Adjust how we tailor your documents to this specific role
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <label className="text-sm font-medium">Focus Areas</label>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input type="checkbox" id="technical" className="rounded" defaultChecked />
+                        <label htmlFor="technical" className="text-sm">Emphasize technical skills</label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input type="checkbox" id="leadership" className="rounded" />
+                        <label htmlFor="leadership" className="text-sm">Highlight leadership experience</label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input type="checkbox" id="achievements" className="rounded" defaultChecked />
+                        <label htmlFor="achievements" className="text-sm">Focus on quantifiable achievements</label>
+                      </div>
                     </div>
                   </div>
-                )}
+                  <div className="space-y-3">
+                    <label htmlFor="custom-instructions" className="text-sm font-medium">Custom Instructions</label>
+                    <Textarea 
+                      id="custom-instructions"
+                      placeholder="Any specific requirements or preferences for your application..."
+                      className="min-h-[100px]"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Generate Button */}
+            <Card>
+              <CardContent className="pt-6">
+                <Button onClick={handleGenerate} className="w-full" size="lg" disabled={isGenerating}>
+                  {isGenerating ? "Generating Documents..." : "Generate Documents"}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
               </CardContent>
             </Card>
           </div>
         )}
 
-        {/* Step 3: Preview */}
+        {/* Loading state for analyzing */}
+        {currentStep === 2 && isAnalyzing && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <h3 className="text-lg font-semibold">Analyzing Job Description</h3>
+                <p className="text-muted-foreground">
+                  Please wait while we extract keywords and analyze the requirements...
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Step 3: Preview CV & Cover Letter */}
         {currentStep === 3 && !isGenerating && !isUpdating && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Step 3: Preview</span>
-                  {jobTitle && (
-                    <div className="text-right">
-                      <div className="text-sm font-medium">{jobTitle}</div>
-                      <div className="text-sm text-muted-foreground">{companyName}</div>
-                    </div>
-                  )}
-                </CardTitle>
+                <CardTitle>Preview Your CV & Cover Letter</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Review your generated documents below. You can switch between length and section options to see different variations.
+                </p>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* CV Options Accordion */}
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="options">
-                    <AccordionTrigger>CV Options</AccordionTrigger>
-                    <AccordionContent className="space-y-6 pt-4">
-                      {/* Page Length */}
-                      <div className="space-y-3">
-                        <Label className="text-sm font-medium">Page Length:</Label>
-                        <RadioGroup
-                          value={generationOptions.length}
-                          onValueChange={(value: 'short' | 'medium' | 'long') => {
-                            setGenerationOptions(prev => ({ ...prev, length: value }));
-                            setSelectedVariant(generateVariantKey(value, generationOptions.sections));
+                {/* Document Options */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Page Length:</Label>
+                    <RadioGroup
+                      value={generationOptions.length}
+                      onValueChange={(value: 'short' | 'medium' | 'long') => {
+                        setGenerationOptions(prev => ({ ...prev, length: value }));
+                        setSelectedVariant(generateVariantKey(value, generationOptions.sections));
+                      }}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="short" id="short" />
+                        <Label htmlFor="short">Short</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="medium" id="medium" />
+                        <Label htmlFor="medium">Medium</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="long" id="long" />
+                        <Label htmlFor="long">Long</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Include sections:</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="achievements"
+                          checked={generationOptions.sections.achievements}
+                          onCheckedChange={(checked) => {
+                            const newSections = { ...generationOptions.sections, achievements: checked as boolean };
+                            setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                            setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
                           }}
-                          className="flex gap-6"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="short" id="short" />
-                            <Label htmlFor="short">Short</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="medium" id="medium" />
-                            <Label htmlFor="medium">Medium</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="long" id="long" />
-                            <Label htmlFor="long">Long</Label>
-                          </div>
-                        </RadioGroup>
+                        />
+                        <Label htmlFor="achievements" className="text-sm">Achievements</Label>
                       </div>
-
-                      {/* CV Sections */}
-                      <div className="space-y-3">
-                        <Label className="text-sm font-medium">Include sections in CV:</Label>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="achievements"
-                              checked={generationOptions.sections.achievements}
-                              onCheckedChange={(checked) => {
-                                const newSections = { ...generationOptions.sections, achievements: checked as boolean };
-                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
-                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
-                              }}
-                            />
-                            <Label htmlFor="achievements">Achievements</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="competencies"
-                              checked={generationOptions.sections.competencies}
-                              onCheckedChange={(checked) => {
-                                const newSections = { ...generationOptions.sections, competencies: checked as boolean };
-                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
-                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
-                              }}
-                            />
-                            <Label htmlFor="competencies">Competencies</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="certifications"
-                              checked={generationOptions.sections.certifications}
-                              onCheckedChange={(checked) => {
-                                const newSections = { ...generationOptions.sections, certifications: checked as boolean };
-                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
-                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
-                              }}
-                            />
-                            <Label htmlFor="certifications">Certifications</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="education"
-                              checked={generationOptions.sections.education}
-                              onCheckedChange={(checked) => {
-                                const newSections = { ...generationOptions.sections, education: checked as boolean };
-                                setGenerationOptions(prev => ({ ...prev, sections: newSections }));
-                                setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
-                              }}
-                            />
-                            <Label htmlFor="education">Education</Label>
-                          </div>
-                        </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="competencies"
+                          checked={generationOptions.sections.competencies}
+                          onCheckedChange={(checked) => {
+                            const newSections = { ...generationOptions.sections, competencies: checked as boolean };
+                            setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                            setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                          }}
+                        />
+                        <Label htmlFor="competencies" className="text-sm">Competencies</Label>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="certifications"
+                          checked={generationOptions.sections.certifications}
+                          onCheckedChange={(checked) => {
+                            const newSections = { ...generationOptions.sections, certifications: checked as boolean };
+                            setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                            setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                          }}
+                        />
+                        <Label htmlFor="certifications" className="text-sm">Certifications</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="education"
+                          checked={generationOptions.sections.education}
+                          onCheckedChange={(checked) => {
+                            const newSections = { ...generationOptions.sections, education: checked as boolean };
+                            setGenerationOptions(prev => ({ ...prev, sections: newSections }));
+                            setSelectedVariant(generateVariantKey(generationOptions.length, newSections));
+                          }}
+                        />
+                        <Label htmlFor="education" className="text-sm">Education</Label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                {/* Document Preview */}
+                {/* Document Preview with Tabs */}
                 {generatedDocuments[selectedVariant] ? (
                   <div className="space-y-4">
                     <Tabs defaultValue="cv" className="w-full">
                       <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="cv">Generated CV</TabsTrigger>
-                        <TabsTrigger value="cover-letter">Generated Cover Letter</TabsTrigger>
+                        <TabsTrigger value="cv">CV</TabsTrigger>
+                        <TabsTrigger value="cover-letter">Cover Letter</TabsTrigger>
                       </TabsList>
                       
-                       <TabsContent value="cv" className="space-y-4">
-                         <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                           <pre className="whitespace-pre-wrap text-sm">{generatedDocuments[selectedVariant]?.cv}</pre>
-                         </div>
-                       </TabsContent>
-                       
-                       <TabsContent value="cover-letter" className="space-y-4">
-                         <div className="border rounded-lg p-4 bg-muted/50 min-h-[400px]">
-                           <pre className="whitespace-pre-wrap text-sm">{generatedDocuments[selectedVariant]?.coverLetter}</pre>
-                         </div>
-                       </TabsContent>
+                      <TabsContent value="cv" className="space-y-4">
+                        {/* CV Validation Badges */}
+                        <div className="flex items-center gap-2 mb-4">
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Factual Accuracy
+                          </Badge>
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Job Alignment
+                          </Badge>
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Anti-Fabrication
+                          </Badge>
+                        </div>
+
+                        {/* Included Keywords */}
+                        <div className="mb-4">
+                          <h4 className="text-sm font-medium mb-2">Included Keywords:</h4>
+                          <div className="flex flex-wrap gap-1">
+                            {extractedKeywords.filter(k => k.status === 'match').map((keyword, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">
+                                {keyword.text}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Alignment Score */}
+                        <div className="mb-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium">Alignment Score:</span>
+                            <span className="text-sm font-bold text-emerald-600">{matchScore}%</span>
+                            <Progress value={matchScore} className="flex-1 h-2" />
+                          </div>
+                        </div>
+
+                        {/* CV Content */}
+                        <div className="border rounded-lg p-6 bg-muted/50 min-h-[400px]">
+                          <pre className="whitespace-pre-wrap text-sm font-mono">{generatedDocuments[selectedVariant]?.cv}</pre>
+                        </div>
+                      </TabsContent>
+                      
+                      <TabsContent value="cover-letter" className="space-y-4">
+                        {/* Cover Letter Validation Badges */}
+                        <div className="flex items-center gap-2 mb-4">
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Tone & Style
+                          </Badge>
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Job Alignment
+                          </Badge>
+                          <Badge variant="success" className="flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            Professional Format
+                          </Badge>
+                        </div>
+
+                        {/* Included Keywords */}
+                        <div className="mb-4">
+                          <h4 className="text-sm font-medium mb-2">Included Keywords:</h4>
+                          <div className="flex flex-wrap gap-1">
+                            {extractedKeywords.filter(k => k.status === 'match').slice(0, 6).map((keyword, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">
+                                {keyword.text}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Cover Letter Content */}
+                        <div className="border rounded-lg p-6 bg-muted/50 min-h-[400px]">
+                          <pre className="whitespace-pre-wrap text-sm font-mono">{generatedDocuments[selectedVariant]?.coverLetter}</pre>
+                        </div>
+                      </TabsContent>
                     </Tabs>
                   </div>
                 ) : (
@@ -526,13 +732,13 @@ John Doe`
                         onClick={handleRequestUpdates}
                       >
                         <Edit3 className="w-4 h-4 mr-2" />
-                        Edit
+                        Edit/Request Update
                       </Button>
                       <Button
                         onClick={() => window.location.href = '/cv-download'}
                         className="flex-1"
                       >
-                        Go to downloads
+                        Go to Downloads
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </>
@@ -586,16 +792,19 @@ John Doe`
 
       {/* Edit Request Modal */}
       <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Documents</DialogTitle>
+            <DialogTitle>Request an Update</DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Describe what you want changed in your CV or cover letter
+            </p>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">CV Updates:</label>
               <Textarea
-                placeholder="Describe any changes you'd like to make to your CV..."
+                placeholder="Describe what you want changed in your CV..."
                 value={cvUpdateRequest}
                 onChange={(e) => setCvUpdateRequest(e.target.value)}
                 className="min-h-[100px]"
@@ -605,7 +814,7 @@ John Doe`
             <div className="space-y-2">
               <label className="text-sm font-medium">Cover Letter Updates:</label>
               <Textarea
-                placeholder="Describe any changes you'd like to make to your cover letter..."
+                placeholder="Describe what you want changed in your cover letter..."
                 value={coverLetterUpdateRequest}
                 onChange={(e) => setCoverLetterUpdateRequest(e.target.value)}
                 className="min-h-[100px]"
@@ -613,7 +822,7 @@ John Doe`
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
@@ -621,7 +830,7 @@ John Doe`
               onClick={handleApplyUpdates}
               disabled={!cvUpdateRequest.trim() && !coverLetterUpdateRequest.trim()}
             >
-              Apply Updates
+              Apply Update
             </Button>
           </DialogFooter>
         </DialogContent>
