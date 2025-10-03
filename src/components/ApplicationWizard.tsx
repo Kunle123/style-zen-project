@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
+import { Slider } from './ui/slider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
@@ -62,6 +63,7 @@ const ApplicationWizard = () => {
   const [cvUpdateRequest, setCvUpdateRequest] = useState('');
   const [coverLetterUpdateRequest, setCoverLetterUpdateRequest] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [rolesCount, setRolesCount] = useState(3); // Default to 3 roles
 
   const steps = [
     { number: 1, title: 'Paste Job Description' },
@@ -625,10 +627,27 @@ John Doe`
                         <Label htmlFor="education" className="text-sm">Education</Label>
                       </div>
                     </div>
-                  </div>
-                </div>
+                   </div>
+                 </div>
 
-                {/* Document Preview with Tabs */}
+                 {/* Trim Roles Slider */}
+                 <div className="space-y-3">
+                   <Label className="text-sm font-medium">Number of roles to include: {rolesCount}</Label>
+                   <Slider
+                     value={[rolesCount]}
+                     onValueChange={(value) => setRolesCount(value[0])}
+                     min={1}
+                     max={5}
+                     step={1}
+                     className="w-full"
+                   />
+                   <div className="flex justify-between text-xs text-muted-foreground">
+                     <span>1 role</span>
+                     <span>5 roles</span>
+                   </div>
+                 </div>
+
+                 {/* Document Preview with Tabs */}
                 {generatedDocuments[selectedVariant] ? (
                   <div className="space-y-4">
                     <Tabs defaultValue="cv" className="w-full">
